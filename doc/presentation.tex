@@ -1,0 +1,349 @@
+\documentclass{beamer}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tikz-er2}
+\usepackage{listings}
+\usetikzlibrary{positioning}
+\usetikzlibrary{shadows}
+
+\begin{document}
+\title{CSL301 Project\\E/R Diagram and implementation details}   
+\author{Aditya Gupta(2015CSB1003) \\ Vinit Kothawade(2015CSB1039) \\ Shreya Dubey(2015CSB1074)}
+\date{} 
+
+\frame{\titlepage} 
+
+\tikzstyle{every entity} = [top color=white, bottom color=blue!30, 
+                            draw=blue!50!black!100, drop shadow]
+\tikzstyle{every weak entity} = [drop shadow={shadow xshift=.7ex, 
+                                 shadow yshift=-.7ex}]
+\tikzstyle{every attribute} = [top color=white, bottom color=yellow!20, 
+                               draw=yellow, node distance=1cm, drop shadow]
+\tikzstyle{every relationship} = [top color=white, bottom color=red!20, 
+                                  draw=red!50!black!100, drop shadow]
+\tikzstyle{every isa} = [top color=white, bottom color=green!20, 
+                         draw=green!50!black!100, drop shadow]
+\begin{frame}{E/R Diagram}
+\scalebox{.35}{
+\begin{tikzpicture}[node distance=2cm, every edge/.style={link}]
+
+%% Student
+\node[entity](stu){Students};
+
+\node[attribute](s_id)[above left=of stu]{\key{ID}} edge (stu);
+\node[attribute](s_name)[above =of stu]{Name} edge (stu);
+\node[attribute](s_dept)[above right=of stu]{Department} edge (stu);
+%\node[attribute](s_cred)[left=of stu]{Total Credits} edge (stu);
+\node[attribute](s_yb)[right=of stu]{Year Batch} edge (stu);
+
+%% Takes
+\node[relationship](takes)[below=1.5 of stu]{Takes} edge (stu);
+
+\node[attribute](t_si2)[above left=of takes]{\key{Section ID}} edge (takes);
+\node[attribute](t_s)[above right=of takes]{\key{Semester}} edge (takes);
+\node[attribute](t_y)[right=of takes]{\key{Year}} edge (takes);
+\node[attribute](t_g)[left=of takes]{Grade} edge (takes);
+
+%% Courses
+\node[entity](cou)[below= of takes]{Courses} edge (takes);
+
+\node[attribute](c_i)[above left=of cou]{\key{Course ID}} edge (cou);
+\node[attribute](c_d)[left=of cou]{Department} edge (cou);
+\node[attribute](c_n)[below left=of cou]{Name} edge (cou);
+\node[attribute](c_l)[above right=of cou]{L} edge(cou);
+\node[attribute](c_t)[right=of cou]{T} edge(cou);
+\node[attribute](c_p)[below right=of cou]{P} edge(cou);
+
+%% Offers
+\node[relationship](off)[below= 3 cm of cou]{Offers} edge (cou);
+
+\node[attribute](osi)[below left=of off]{Section ID} edge (off);
+\node[attribute](os)[above right=of off]{Semester} edge (off);
+\node[attribute](oy)[right=of off]{Year} edge (off);
+\node[attribute](omc)[above left=of off]{Minimum Grade} edge (off);
+\node[attribute](oi)[left=of off]{\key{Offer ID}} edge (off);
+
+%% Faculty
+\node[entity](fac)[below= 1 cm of off]{Faculty} edge (off);
+
+\node[attribute](f_i)[below left=of fac]{\key{Faculty ID}} edge (fac);
+\node[attribute](f_n)[below=of fac]{Name} edge (fac);
+\node[attribute](f_d)[below right=of fac]{Department} edge (fac);
+
+%% Section
+\node[entity](sec)[right=8 cm of stu]{Section};
+
+\node[attribute](sec_i)[above left=of sec]{\key{Section ID}} edge (sec);
+\node[attribute](sec_ci)[left=of sec]{\key{Course ID}} edge (sec);
+\node[attribute](sec_s)[below left=of sec]{\key{Semester}} edge (sec);
+\node[attribute](sec_y)[below right=of sec]{\key{Year}} edge (sec);
+\node[attribute](sec_b)[above =of sec]{Building} edge (sec);
+\node[attribute](sec_r)[above right=of sec]{Room No.} edge (sec);
+\node[attribute](sec_ts)[right=of sec]{Time Slot ID} edge (sec);
+
+%% Department
+\node[entity](dep)[below=1.5cm of sec]{Department};
+
+\node[attribute](d_n)[below left=of dep]{\key{Name}} edge (dep);
+\node[attribute](d_b)[below right=of dep]{Building} edge (dep);
+
+%% Prerequisites
+\node[relationship](pre)[below= of dep]{Prerequisites};
+
+\draw[link] (cou) to[in=135, out=15] node[auto]{prerequisite} (pre);
+\draw[link] (cou) to[in=225,out=345] node[auto]{course} (pre);
+
+
+%% Timeslot
+\node[entity](tim)[below=1cm of pre]{Timeslot};
+
+\node [attribute](st)[left = of tim]{\key{Start Time}} edge (tim);
+\node [attribute](et)[below left = of tim]{End Time} edge (tim);
+\node [attribute](tsid)[right = of tim]{\key{Time Slot ID}} edge (tim);
+\node [attribute](d)[below right = of tim]{\key{Day}} edge (tim);
+
+%% Classroom
+\node[entity](cla)[below= 1.5 cm of tim]{Classroom};
+
+\node[attribute](cl_b)[below left=of cla]{\key{Building}} edge (cla);
+\node[attribute](cl_r)[below=of cla]{\key{Room No.}} edge (cla);
+\node[attribute](cl_c)[below right=of cla]{Capacity} edge (cla);
+
+%% Ticket
+\node[relationship](tic)[left=7.5 cm of stu]{Ticket};
+\draw[link](tic) -- (stu);
+\draw[link](tic.270) to[in=180,out=345] (fac);
+\draw[link](tic.270) to[in=175,out=345] (cou);
+
+\node[attribute](tic_oi)[above left=of tic]{Offer ID} edge (tic);
+\node[attribute](tic_status)[above=of tic]{Status} edge (tic);
+
+%% Faculty ISA
+\node[isa](isa)[left=3cm of fac]{ISA} edge (fac);
+
+%% HOD
+\node[weak entity](hod)[below=of tic]{HOD} edge[in=180,out=0] (isa);
+
+\node[attribute](hod_st)[above left=of hod]{Start Time} edge (hod);
+\node[attribute](hod_et)[below left=of hod]{End Time} edge (hod);
+%\node[attribute](hod_dept)[left=of hod]{Department} edge (hod);
+
+%% Dean
+\node[weak entity](dean)[below=3cm of hod]{Dean} edge[in=180,out=0] (isa);
+
+\node[attribute](dean_st)[above left=of dean]{Start Time} edge (dean);
+\node[attribute](dean_et)[below left=of dean]{End Time} edge (dean);
+
+%% Dean Office
+\node[relationship](d_o)[below=0.5cm of dean]{Dean Office} edge[->] (dean);
+
+%% Staff
+\node[entity](staff)[below = 0.5cm  of d_o]{Staff} edge (d_o);
+
+\node[attribute](staff_id)[left=of staff]{\key{Staff ID}} edge (staff);
+\node[attribute](staff_name)[below left=of staff]{Name} edge (staff);
+
+%% Allowed Batches
+\node[entity](ab)[below=of cla]{Allowed Batches};
+\draw[link](off) to[out=345,in=180] (ab);
+
+\node[attribute](ab_fi)[below left=of ab]{Offer ID} edge (ab);
+\node[attribute](ab_d)[below=of ab]{Department} edge(ab);
+\node[attribute](ab_d)[below right=of ab]{Year Batch} edge(ab);
+
+%% Faculty Advisor
+\node[weak entity](fa)[below=of staff]{Faculty Advisor} edge[in=180,out=0] (isa);
+
+\node[attribute](yb)[below=of fa]{Year Batch} edge (fa);
+\end{tikzpicture}
+} % centering
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Foreign Keys \& Primary Keys}
+\begin{enumerate}
+\item The underlined attributes of the entities form the primary key of that entity.
+\item The underlined attributes along with the primary keys of corresponding relations of a relationship forms the primary key of the relationship.
+\item (Section ID,Course ID,Semester,Year) in Takes refers to (Section ID,Course ID,Semester,Year) in Section
+\item  (Section ID,Course ID,Semester,Year) in Offers refers to (Section ID,Course ID,Semester,Year) in Section
+\item Course ID in Section refers to Course ID in courses
+\item Time slot ID in section refers to Time Slot ID in Timeslot relation
+\item (Building,Room No.) in Section refers to (Building,Room No.) in Classroom relation
+\item Offer ID in Allowed Batches refers to Offer ID in Offers relationship  
+\item Department in Allowed Batches refers to Name in Department 
+\item Department in Students refers to Name in Department
+\item Department in Faculty refers to Name in Department
+\item Department in Courses refers to Name in Department
+\item Offer ID in Ticket relationship refers to Offer ID in Offers relationship
+
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Portals}
+We will have 5 different portals, one for
+\begin{itemize}
+\item Students
+\item Faculty
+\item HoD
+\item Dean Academics
+\item Staff Dean's Office
+\end{itemize}
+Each of them will have a separate login ID and respective portal will open.
+Each portal will have different functionalities.
+\end{frame}
+
+\begin{frame}{Functionalities of Student Portal}
+\begin{itemize}
+\item Register for a course
+\item View his academic performance
+\item Generate ticket for registering for courses which he is not eligible
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Functionalities of Faculty Portal}
+\begin{itemize}
+\item Offer a course
+\item View grades of all the students
+\item Update grades of students of his course
+\item Accept/Reject/Forward a ticket
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Functionalities of HoD Portal}
+\begin{itemize}
+\item View grades of all the students
+\item Accept/Reject/Forward a ticket
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Functionalities of Dean Academics Portal}
+\begin{itemize}
+\item Add or Delete courses from course catalog
+\item View grades of all the students
+\item Accept/Reject a ticket
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Functionalities of Staff Dean's Office Portal}
+\begin{itemize}
+\item View grades of all the students
+\item Report generation (like transcripts of students. list of probation students)
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Relations}
+In our database we have Relations:
+
+\begin{itemize}
+\item Students
+\item Faculty (isa members):
+\begin{itemize}
+\item Dean
+\item HoD
+\item Faculty Advisor
+\end{itemize}
+\item Courses
+\item Department
+\item Section
+\item Timeslot
+\item Classroom
+\item Allowed Batches
+\item Staff
+\end{itemize}
+\end{frame}
+\begin{frame}{Relationships}
+
+We have following relationships :
+\begin{itemize}
+\item many to many relationship ``Offers'' between ``Faculty'' and ``Courses''
+\item many to many relationship ``Takes'' between ``Students'' and ``Courses''
+\item many to many relationship ``Prerequisites'' between  ``Courses'' and ``Courses''
+\item many to many multi-way relationship ``Ticket'' between ``Student'', ``Courses'' and ``Faculty''.
+\item many to one relationship ``Dean Office'' from ``Staff'' to ``Dean''
+\end{itemize}
+\end{frame}
+
+\begin{frame}[allowframebreaks]{Implementation Details}
+\begin{enumerate}
+\item {\bf Course Catalog}: We have created a separate table for courses which consists of L,T,P as attributes and each course is uniquely identified by its primary key ``Course ID''. We have defined a relationship Prerequisites which is a many to many relationship from courses to courses.
+\item {\bf Course Offerings}: We have a many to many relationship ``Offers'' from faculty to course that is each faculty can offer multiple course and each course can be offered by multiple faculty members. The ``Course ID'' here refers to the ``Course ID'' attribute in ``Courses'' table. We have a table for ``Allowed Batches'' which has ``Offer ID'' which refers to ``Offers'' table, ``Batch'' and ``Department'' as attributes. The ``Offers'' relationship has an attribute ``Minimum Grade''. So the student can register for a course only if his/her Grade is greater that this.
+\item {\bf Student Registration}: We have a many to many relationship from ``Students'' to ``Courses'' thus a student can take many courses. The ``1.25 rule'' can be implemented in the following way:
+\begin{quote}
+We will group rows by the given ``Student ID'' and last semester and find sum of the credits of all those courses by referring to the ``Course'' relation and we will do the same for second last semester and calculate the average of both the sums and multiply it with 1.25. This will be the maximum number of credits a student can register in current semester. We will be using the check constraints to check if the total credits registered by a student is less than this limit.
+\end{quote}
+\item {\bf Ticket Generation}: We have a relationship for tickets between ``Students'', ``Faculty'' and ``Courses'' which has ``Offer ID'' and status. Status is an integer which can have following values:
+\begin{center}
+\begin{tabular}{c |c}
+Status ID & Description\\\hline
+0&Ticket just generated by student\\
+1&Accepted and closed by Faculty\\
+2&Rejected by Faculty\\
+3&Accepted and Forwarded by Faculty\\
+4&Accepted and Closed by Faculty Advisor\\
+5&Rejected by Faculty Advisor\\
+6& Accepted and Forwarded by Faculty Advisor\\
+7&Accepted and Closed by HoD\\
+8&Rejected by HoD\\
+9&Accepted and Forwarded by HoD\\
+10&Accepted and Closed by Dean\\
+11&Rejected by Dean
+\end{tabular}
+\end{center}
+If a student wants to register for a course for which he is not eligible he can generate a ticket corresponding to which and entry will be added to the Ticket table with status 0 and the status will be updated corresponding to Approval/Rejection by respective authorities. Finally if status is 1/4/7/10 then we will insert the entry of this course into ``Takes'' relationship and delete it from ``Ticket'' relationship.
+
+\item {\bf Report Generation}: Staff of Dean's Office will be able to access the grades of all the students so they can view the Grades of all the students and hence create various kinds of reports like student transcripts, list of probation students, Aggregate views of grades.
+
+\item {\bf Grade Entry by Course Instructors}: The Faculty will have the sole access to update the grade attribute of the ``Takes'' relationship.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[allowframebreaks, fragile]{Various Checks, Stored Procedures, Constraints and Privileges to be implemented}
+\begin{enumerate}
+\item {\bf To ensure that a student is not allowed to register for courses which are scheduled in the same Time Slot}: When a student wants to register for a course we access the ``Takes'' relation and select the rows having same ``Student ID'' and then using the ``Section ID'' we access the section table and check whether the Time Slot of current course conflicts with any of the Time Slot IDs in the selected rows. And we add this as a Check Constraint while inserting the entry into ``Takes'' table.
+
+\item {\bf Checking Prerequisites}: If a student wants to register for a particular course, the prerequisites are checked. Using the ``Course ID'' we select a list (say List-I) of ``Course ID''s of all the prerequisites of that course from the Prerequisites relationship and in the ``Takes'' table we select the ``Course ID''s from rows having same ``Student ID'' where Grade greater than 2 (for passing a course grade should be greater than 2, i.e. E) (say List-II) and we check if all the entries in List-I are present in List-II by using ALL in SQL queries. We add this as a check constraint while inserting the entry into ``Takes'' table.
+
+\item We grant permission to update the ``Courses'' relation only to the Staff Dean's Office and Dean Academics using the GRANT command in SQL.
+
+\item To ensure that a student can see only his/her grades and a Faculty, HoD, Dean Academics and Staff can see all the grades, we will grant access to SELECT only those rows from ``Takes'' table WHERE Takes.Student\_ID = Student.ID. And permissions to SELECT and UPDATE all the entries will be granted to Dean Academics and Staff Dean's Office using the GRANT command of SQL.
+
+\item It is a tedious procedure to calculate a Grades of a student from the database and it contains many SQL commands as well as arithmetic operations. As this procedure is used multiple times, we will create a stored procedure for calculating the Grade of a student.
+
+\lstset{language=SQL,basicstyle=\ttfamily,numbers=left,numberstyle=\tiny}
+\begin{lstlisting}[breaklines]
+CREATE PROCEDURE calculate_CGPA
+@Student_ID Integer
+AS
+SELECT S / Credits 
+FROM 
+	(SELECT SUM(Grade * (Courses.L + Courses.T + Courses.P/2)) FROM Takes, Courses) AS S,
+	(SELECT SUM(Courses.L + Courses.T + Courses.P / 2) FROM Takes, Courses) AS Credits 
+WHERE 
+	Courses.ID=Takes.Course_ID AND 
+	Takes.Student_ID = @Student_ID
+GO
+\end{lstlisting}
+
+\item If a student wants to register for a course we calculate his grade using the stored procedure and then compare it with the ``Minimum Grade'' in the ``Offers'' relationship with corresponding ``Course ID'', ``Semester'', ``Faculty ID'' and ``Year''.
+
+\item We can also have a stored procedure for calculating the total credits of a student by adding all the credits in the courses that he passed in the ``Takes'' relationship.
+\end{enumerate}
+\end{frame}
+
+\begin{frame}{Use of Triggers}
+\begin{itemize}
+\item In case any faculty leaves, the corresponding rows are deleted in the ``Faculty'' relation and all the rows in the ``Offers'' relationship with the given Faculty ID are automatically deleted by the use of trigger.
+\item Using the BEFORE option with the Trigger, the code within the trigger will be executed before the INSERT into the table occurs. This will be used to verify the input values of the INSERT. For example, if the last name of the student is more than 10 letters, before insertion or updation, we take the substring and change the name value to this.
+
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Assertions}
+\begin{itemize}
+\item Check each department has only one HoD.
+\item Two Dean's durations must not collide.
+
+\end{itemize}
+\end{frame}
+
+\end{document}
+
