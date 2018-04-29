@@ -10,7 +10,7 @@
         
         $password = mysqli_real_escape_string($db, $_POST['password']);
         
-        $sql = "SELECT id FROm admin WHERE username = '$username' and password = '$password'";
+        $sql = "SELECT id FROM admin WHERE username = '$username' and password = '$password'";
         $result = mysqli_query($db, $sql);
         $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
         $count = mysqli_num_rows($result);
