@@ -52,7 +52,7 @@
             </nav>
 
             <div class="tab-content">
-                <div id="acadperf" class="tab-pane fade in active">
+                <div id="acadperf" class="tab-pane active">
                     <table class="table table-striped">
                         <thead>
                             <tr>
@@ -81,13 +81,11 @@
                     </table>
                     
                 </div>
-                <div id="regcourse" class="tab-pane fade">
-                    <h3>Menu 1</h3>
-                    <p>Some content in menu 1.</p>
+                <div id="regcourse" class="tab-pane">
+                    Register for a course.
                 </div>
-                <div id="genticket" class="tab-pane fade">
-                    <h3>Menu 2</h3>
-                    <p>Some content in menu 2.</p>
+                <div id="genticket" class="tab-pane">
+                    Generate a ticket.
                 </div>
             </div>
 
