@@ -1,8 +1,8 @@
 <?php
     include('session.php');
     include("constants.php");
-    if (!isset($_SESSION['position']) || $_SESSION['position'] != TEACHERS) {
-        echo "Your login does not entail teacher portal";
+    if (!isset($_SESSION['position']) || $_SESSION['position'] != HOD) {
+        echo "Your login does not enatil HOD portal";
         die();
     }
 ?>
@@ -28,13 +28,7 @@
 
             </li>
             <li>
-                <a href="#update_grade">Update Grades</a>
-            </li>
-            <li>
                 <a href="#manage_tickets">Manage Tickets</a>
-            </li>
-            <li>
-                <a href="#offer_course">Offer Course</a>
             </li>
             <li>
                 <a href="logout.php">Sign Out</a>
@@ -47,16 +41,8 @@
             <h1>View Grades</h1>
         </div>
         
-        <div id="update_grade">
-            <h1>Update Grades</h1>
-        </div>
-        
         <div id="manage_tickets">
             <h1>Manage Tickets</h1>
-        </div>
-        
-        <div id="offer_course">
-            <h1>Offer Course</h1>
         </div>
 
     </body>

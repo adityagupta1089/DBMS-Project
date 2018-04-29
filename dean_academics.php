@@ -1,8 +1,8 @@
 <?php
     include('session.php');
     include("constants.php");
-    if (!isset($_SESSION['position']) || $_SESSION['position'] != STUDENTS) {
-        echo "Your login does not entail student portal";
+    if (!isset($_SESSION['position']) || $_SESSION['position'] != DEAN_ACADEMICS) {
+        echo "Your login does not entail Dean Academics portal";
         die();
     }
 ?>
@@ -25,21 +25,23 @@
                 <?php echo $login_session; ?>
             </h1>
 
-            <ul>
-                <li>
-                    <a href="#acadperf">Academic Performance</a>
-                </li>
-                <li>
-                    <a href="#regcourse">Register for a Course</a>
-                </li>
-                <li>
-                    <a href="#genticket">Generate Ticket</a>
-                </li>
-                <li>
-                    <a href="logout.php">Sign Out</a>
-                </li>
+            <div>
+                <ul>
+                    <li>
+                        <a href="#acadperf">Academic Performance</a>
+                    </li>
+                    <li>
+                        <a href="#regcourse">Register for a Course</a>
+                    </li>
+                    <li>
+                        <a href="#genticket">Generate Ticket</a>
+                    </li>
+                    <li>
+                        <a href="logout.php">Sign Out</a>
+                    </li>
 
-            </ul>
+                </ul>
+            </div>
 
             <div id="acadperf">
                 <h1>Academic Performance</h1>
@@ -71,7 +73,7 @@
                 </table>
 
             </div>
-
+            
             <div id="regcourse">
                 <h1>Register for a course</h1>
                 Select Course:
@@ -87,7 +89,7 @@
                     ?>
                     </select>
             </div>
-
+            
             <div id="genticket">
                 <h1>Generate a ticket.</h1>
             </div>
