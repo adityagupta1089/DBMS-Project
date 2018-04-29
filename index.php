@@ -57,7 +57,7 @@
             <form id="register-form">
                 <div id="form-div">
                     <div class="form-group">
-                        <label for="register-name">User name</label>
+                        <label for="register-name">Username</label>
                         <input type="text" class="form-control" id="register-name" placeholder="Username">
                     </div>
                     <div class="form-group">
