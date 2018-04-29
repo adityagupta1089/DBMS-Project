@@ -51,39 +51,36 @@
         <div class="container">
 
             <!-- Title -->
-            <h1 class="display-1">Login into Academic Portal</h1>
-            
-            <!-- Register Form -->
-            <form id="register-form">
-                <div id="form-div">
-                    <div class="form-group">
-                        <label for="register-name">Username</label>
-                        <input type="text" class="form-control" id="register-name" placeholder="Username">
-                    </div>
-                    <div class="form-group">
-                        <label for="register-pass">Password</label>
-                        <input type="password" class="form-control" id="register-pass" placeholder="Password">
-                    </div>
-                    <div class="radio">
-                        <label><input type="radio" name="post">Student</label>
-                    </div>
-                    <div class="radio">
-                        <label><input type="radio" name="post">Teaching Faculty</label>
-                    </div>
-                    <div class="radio">
-                        <label><input type="radio" name="post">Staff</label>
-                    </div>
-                    <div class="row">
-                        <button class="btn btn-primary" type="submit">Register</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+            <h1 class="display-2 text-center">Login into Academic Portal</h1>
 
-        <!-- Bootstap core Javascripts -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
+            <!-- Login Form -->
+            <div id="login" class="tab-pane active container">
+                <!-- Login form -->
+                <form id="login-form">
+                    <div>
+                        <div class="form-group">
+                            <label for="login-name">User name</label>
+                            <input type="text" class="form-control" id="login-name" placeholder="Username">
+                        </div>
+                        <div class="form-group">
+                            <label for="login-pass">Password</label>
+                            <input type="password" class="form-control" id="login-pass" placeholder="Password">
+                        </div>
+                        <div style="font-size:11px; color:#cc0000; margin-top:10px">
+                            <?php echo $error; ?>
+                        </div>
+                        <div class="row">
+                            <button class="btn btn-primary" type="submit">Login</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+
+            <!-- Bootstap core Javascripts -->
+            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
         </div>
     </body>
 
