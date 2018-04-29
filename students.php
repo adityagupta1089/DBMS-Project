@@ -33,23 +33,38 @@
   </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Academic Performance<span class="sr-only">(current)</span></a>
+                    <ul class="nav mr-auto nav-tabs">
+                        <li class="active">
+                            <a class="nav-link" data-toggle="tab" href="#acadperf">Academic Performance</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Register for a Course</a>
+                        <li>
+                            <a class="nav-link" data-toggle="tab" href="#regcourse">Register for a Course</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Generate Ticket</a>
+                        <li>
+                            <a class="nav-link" data-toggle="tab" href="#genticket">Generate Ticket</a>
                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="logout.php">Sign Out</a>
+                        <li>
+                            <a class="nav-link" data-toggle="tab" href="logout.php">Sign Out</a>
                         </li>
-                        
+
                     </ul>
                 </div>
             </nav>
+
+            <div class="tab-content">
+                <div id="acadperf" class="tab-pane fade in active">
+                    <h3>HOME</h3>
+                    <p>Some content.</p>
+                </div>
+                <div id="regcourse" class="tab-pane fade">
+                    <h3>Menu 1</h3>
+                    <p>Some content in menu 1.</p>
+                </div>
+                <div id="genticket" class="tab-pane fade">
+                    <h3>Menu 2</h3>
+                    <p>Some content in menu 2.</p>
+                </div>
+            </div>
 
         </div>
 
