@@ -28,16 +28,16 @@
             <div>
                 <ul>
                     <li>
-                        <a class="nav-link" data-toggle="tab" href="#acadperf">Academic Performance</a>
+                        <a href="#acadperf">Academic Performance</a>
                     </li>
                     <li>
-                        <a class="nav-link" data-toggle="tab" href="#regcourse">Register for a Course</a>
+                        <a href="#regcourse">Register for a Course</a>
                     </li>
                     <li>
-                        <a class="nav-link" data-toggle="tab" href="#genticket">Generate Ticket</a>
+                        <a href="#genticket">Generate Ticket</a>
                     </li>
                     <li>
-                        <a class="nav-link" href="logout.php">Sign Out</a>
+                        <a href="logout.php">Sign Out</a>
                     </li>
 
                 </ul>
@@ -73,7 +73,7 @@
                 </table>
 
             </div>
-            <div id="regcourse" class="tab-pane">
+            <div id="regcourse">
                 <h1>Register for a course</h1>
                 Select Course:
                 <select>
@@ -88,7 +88,7 @@
                     ?>
                     </select>
             </div>
-            <div id="genticket" class="tab-pane" style="padding:50px;">
+            <div id="genticket">
                 <h1>Generate a ticket.</h1>
             </div>
 
