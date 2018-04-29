@@ -28,7 +28,10 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 CREATE TABLE `allowed_batches` (
   `Offer_ID` int(11) NOT NULL,
   `Department` varchar(100) NOT NULL,
-  `Batch_year` int(11) NOT NULL
+  `Batch_year` int(11) NOT NULL,
+  Key `Offer_ID` (`Offer_ID`)
+  key `Department` (`Department`)
+  
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -67,7 +70,8 @@ CREATE TABLE `courses` (
   `P` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   `Department` varchar(100) NOT NULL,
-  PRIMARY KEY (`Course_ID`)
+  PRIMARY KEY (`Course_ID`),
+  KEY  `department`(`department`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -100,7 +104,9 @@ CREATE TABLE `dean` (
 
 CREATE TABLE `department` (
   `Name` varchar(100) NOT NULL,
-  `Building` varchar(100) NOT NULL
+  `Building` varchar(100) NOT NULL,
+  primary key(`Name`),
+  KEY `Building` (`Building`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -118,7 +124,8 @@ CREATE TABLE `faculty` (
   `Faculty_ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) NOT NULL,
   `Department` varchar(100) NOT NULL,
-  PRIMARY KEY (`Faculty_ID`)
+  PRIMARY KEY (`Faculty_ID`),
+  key `Department` (`Department`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
@@ -172,7 +179,11 @@ CREATE TABLE `offers` (
   `Year` int(11) NOT NULL,
   `Offer_ID` int(11) NOT NULL,
   `section_ID` int(11) NOT NULL,
-  `Minimum_CGPA` int(11) NOT NULL DEFAULT '0'
+  `Minimum_CGPA` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`offer_ID`,`course_ID`,`faculty_ID`)
+  KEY  `section_att` (`section_ID`,`Semester`,`Year`),
+
+
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -188,7 +199,8 @@ CREATE TABLE `offers` (
 
 CREATE TABLE `prerequisites` (
   `Course_ID` int(11) NOT NULL,
-  `Prerequisite_ID` int(11) NOT NULL
+  `Prerequisite_ID` int(11) NOT NULL,
+  PRIMARY Key (`Course_ID`,`Prerequisite_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -210,10 +222,7 @@ CREATE TABLE `section` (
   `Time_slot_ID` int(11) NOT NULL,
   `Year` int(11) NOT NULL,
   `Semester` varchar(50) NOT NULL,
-  PRIMARY KEY (`Section_ID`),
-  UNIQUE KEY `Year` (`Year`),
-  UNIQUE KEY `Semester` (`Semester`),
-  UNIQUE KEY `Course_ID` (`Course_ID`),
+  PRIMARY KEY (`Section_ID`,`Course_ID`,`semester`,`year`),
   KEY `Time_slot_ID` (`Time_slot_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
@@ -233,6 +242,7 @@ CREATE TABLE `staff` (
   `Faculty_ID` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Staff_ID`)
+  KEY `Faculty_ID`(`Faculty_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
@@ -252,6 +262,7 @@ CREATE TABLE `students` (
   `Department` varchar(100) NOT NULL,
   `Batch_Year` int(11) NOT NULL,
   PRIMARY KEY (`ID`)
+  KEY `Department`(`Department`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 --
@@ -268,7 +279,8 @@ CREATE TABLE `students` (
 CREATE TABLE `takes` (
   `Student_ID` int(11) NOT NULL,
   `Offer_ID` int(11) NOT NULL,
-  `Grade` int(11) NOT NULL
+  `Grade` int(11) NOT NULL,
+  PRIMARY KEY (`Student_ID`,`Offer_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -287,7 +299,11 @@ CREATE TABLE `ticket` (
   `Student_ID` int(11) NOT NULL,
   `Course_ID` int(11) NOT NULL,
   `Faculty_ID` int(11) NOT NULL,
-  `Status` int(11) NOT NULL
+  `Status` int(11) NOT NULL,
+  PRIMARY Key (`Offer_ID`,`Student_ID`)
+  KEY `Course_ID`(`Course_ID`)
+  KEY `Faculty_ID`(`Faculty_ID`)
+  
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -323,3 +339,9 @@ CREATE TABLE `time_slot` (
 --
 ALTER TABLE `section`
   ADD CONSTRAINT `section_ibfk_1` FOREIGN KEY (`Course_ID`) REFERENCES `courses` (`Course_ID`);
+  
+ALTER TABLE `offers`
+  ADD CONSTRAINT `offers_fk1` FOREIGN KEY (`section_ID`,`Course_ID`,`semester`,`year`) REFERENCES `section` (`section_ID`,`Course_ID`,`semester`,`year`);
+  
+ALTER TABLE `section`
+  ADD CONSTRAINT `section_fk3` FOREIGN KEY (`Building`,`room_no`) REFERENCES `classroom`` (`Building`,`room_no`);
