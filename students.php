@@ -85,7 +85,8 @@
                                     echo "</a></option>";
                                 }
                     ?>
-                    </select>
+                </select>
+                <button>Register</button>
             </div>
 
             <div id="genticket">
