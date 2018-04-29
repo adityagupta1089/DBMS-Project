@@ -44,7 +44,7 @@
                             <a class="nav-link" data-toggle="tab" href="#genticket">Generate Ticket</a>
                         </li>
                         <li>
-                            <a class="nav-link" data-toggle="tab" href="logout.php">Sign Out</a>
+                            <a class="nav-link" href="logout.php">Sign Out</a>
                         </li>
 
                     </ul>
@@ -53,8 +53,33 @@
 
             <div class="tab-content">
                 <div id="acadperf" class="tab-pane fade in active">
-                    <h3>HOME</h3>
-                    <p>Some content.</p>
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Course ID</th>
+                                <th>Minimum CGPA</th>
+                                <th>Grade</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                                $sql = "SELECT offers.course_id, offers.minimum_cgpa, takes.grade FROM takes, offers WHERE offers.offer_id = takes.offer_id AND takes.student_id =" .  $_SESSION["id"];
+                                $result = mysqli_query($db, $sql);                            
+                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                    echo "<tr>";
+                                    echo '<th scope="row">' . $row["course_id"] . "</th>";
+                                    echo '<td>' . $row["minimum_cgpa"] . '</td>';
+                                    if ($row["grade"]) {
+                                        echo '<td>' . $row["grade"] . '</td>';
+                                    } else {
+                                        echo '<td>Not Yet Completed</td>';
+                                    }
+                                    echo "<tr>";
+                                }
+                    ?>
+                        </tbody>
+                    </table>
+                    
                 </div>
                 <div id="regcourse" class="tab-pane fade">
                     <h3>Menu 1</h3>
