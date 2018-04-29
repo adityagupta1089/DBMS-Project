@@ -44,7 +44,7 @@
                             <a class="nav-link" data-toggle="tab" href="#genticket">Generate Ticket</a>
                         </li>
                         <li>
-                            <a class="nav-link" data-toggle="tab" href="logout.php">Sign Out</a>
+                            <a class="nav-link" href="logout.php">Sign Out</a>
                         </li>
 
                     </ul>

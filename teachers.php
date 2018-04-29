@@ -33,26 +33,50 @@
   </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">View Grades<span class="sr-only">(current)</span></a>
+                    <ul class="nav mr-auto nav-tabs">
+                        <li class="active">
+                            <a class="nav-link" data-toggle="tab" href="#view_grade">View Grades<span class="sr-only">(current)</span></a>
+                            
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Update Grades</a>
+                        <li>
+                            <a class="nav-link" data-toggle="tab" href="#update_grade">Update Grades</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Manage Tickets</a>
+                        <li>
+                            <a class="nav-link" data-toggle="tab" href="#manage_tickets">Manage Tickets</a>
                         </li>
-                         <li class="nav-item">
-                            <a class="nav-link" href="#">Offer Course</a>
+                         <li>
+                            <a class="nav-link" data-toggle="tab" href="#offer_course">Offer Course</a>
                         </li>
-                         <li class="nav-item">
+                         <li>
                             <a class="nav-link" href="logout.php">Sign Out</a>
                         </li>
                         
                     </ul>
                 </div>
             </nav>
+            
+            
+            <div class="tab-content">
+                <div id="view_grade" class="tab-pane active">
+                    <h3>HOME</h3>
+                    <p>View Grades : 
+                        
+                    
+                    </p>
+                </div>
+                <div id="update_grade" class="tab-pane">
+                    <h3>Menu 1</h3>
+                    <p>Some content in menu 1.</p>
+                </div>
+                <div id="manage_tickets" class="tab-pane">
+                    <h3>Menu 1</h3>
+                    <p>Some content in menu 1.</p>
+                </div>
+                <div id="offer_course" class="tab-pane">
+                    <h3>Menu 2</h3>
+                    <p>Some content in menu 2.</p>
+                </div>
+            </div>
 
         </div>
 
