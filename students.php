@@ -12,66 +12,87 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <meta name="description" content="">
         <meta name="author" content="">
 
         <title>Welcome</title>
-
-        <!-- Bootstrap core CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
-
     </head>
 
-    <body>
+    <body style="margin:50px;">
         <div class="container">
 
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="#">Welcome <?php echo $login_session; ?></a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+            <h1>Welcome
+                <?php echo $login_session; ?>
+            </h1>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="nav mr-auto nav-tabs">
-                        <li class="active">
-                            <a class="nav-link" data-toggle="tab" href="#acadperf">Academic Performance</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" data-toggle="tab" href="#regcourse">Register for a Course</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" data-toggle="tab" href="#genticket">Generate Ticket</a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="logout.php">Sign Out</a>
-                        </li>
+            <div>
+                <ul>
+                    <li>
+                        <a class="nav-link" data-toggle="tab" href="#acadperf">Academic Performance</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" data-toggle="tab" href="#regcourse">Register for a Course</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" data-toggle="tab" href="#genticket">Generate Ticket</a>
+                    </li>
+                    <li>
+                        <a class="nav-link" href="logout.php">Sign Out</a>
+                    </li>
 
-                    </ul>
-                </div>
-            </nav>
+                </ul>
+            </div>
 
-            <div class="tab-content">
-                <div id="acadperf" class="tab-pane fade in active">
-                    <h3>HOME</h3>
-                    <p>Some content.</p>
-                </div>
-                <div id="regcourse" class="tab-pane fade">
-                    <h3>Menu 1</h3>
-                    <p>Some content in menu 1.</p>
-                </div>
-                <div id="genticket" class="tab-pane fade">
-                    <h3>Menu 2</h3>
-                    <p>Some content in menu 2.</p>
-                </div>
+            <div id="acadperf">
+                <h1>Academic Performance</h1>
+                <table border=1>
+                    <thead>
+                        <tr>
+                            <th>Course ID</th>
+                            <th>Minimum CGPA</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                                $sql = "SELECT offers.course_id, offers.minimum_cgpa, takes.grade FROM takes, offers WHERE offers.offer_id = takes.offer_id AND takes.student_id =" .  $_SESSION["id"];
+                                $result = mysqli_query($db, $sql);                            
+                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                    echo "<tr>";
+                                    echo '<th scope="row">' . $row["course_id"] . "</th>";
+                                    echo '<td>' . $row["minimum_cgpa"] . '</td>';
+                                    if ($row["grade"]) {
+                                        echo '<td>' . $row["grade"] . '</td>';
+                                    } else {
+                                        echo '<td>Not Yet Completed</td>';
+                                    }
+                                    echo "</tr>";
+                                }
+                    ?>
+                    </tbody>
+                </table>
+
+            </div>
+            <div id="regcourse" class="tab-pane">
+                <h1>Register for a course</h1>
+                Select Course:
+                <select>
+                            <?php
+                                $sql = "SELECT offers.course_id, courses.name FROM offers, courses WHERE offers.course_id = courses.course_id";
+                                $result = mysqli_query($db, $sql);                            
+                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                    echo "<option><a href=\"#\" class=\"dropdown-item\">";
+                                    echo $row["course_id"] . ": " . $row["name"];
+                                    echo "</a></option>";
+                                }
+                    ?>
+                    </select>
+            </div>
+            <div id="genticket" class="tab-pane" style="padding:50px;">
+                <h1>Generate a ticket.</h1>
             </div>
 
         </div>
-
-        <!-- Bootstap core Javascripts -->
-        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/js/bootstrap.min.js" integrity="sha384-a5N7Y/aK3qNeh15eJKGWxsqtnX/wWdSZSKp+81YjTmS15nvnvxKHuzaWwXHDli+4" crossorigin="anonymous"></script>
     </body>
 
     </html>
