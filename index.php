@@ -1,4 +1,6 @@
 <?php
+    $error="";
+
     include("config.php");
     session_start();
 
