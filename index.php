@@ -21,6 +21,10 @@
             $_SESSION['position'] = $row["id"];
             if ($_SESSION['position'] == 0) {
                 header("location:students.php");
+            } elseif ($_SESSION['position'] == 1){
+                header("location:teachers.php");
+            } elseif ($_SESSION['position'] == 2) {
+                header("location:staff.php");
             }
         } else {
             $error = "Your Login Name or Password is invalid";
@@ -61,7 +65,7 @@
                 <form id="login-form" action="" method="post">
                     <div>
                         <div class="form-group">
-                            <label for="username">User name</label>
+                            <label for="username">Username</label>
                             <input type="text" name="username" class="form-control" id="username" placeholder="Username">
                         </div>
                         <div class="form-group">
