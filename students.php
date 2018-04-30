@@ -19,10 +19,9 @@
     </head>
 
     <body style="margin:50px;">
-        <div class="container">
 
-            <h1>Welcome
-                <?php 
+        <h1>Welcome
+            <?php 
                     echo $login_session; 
                     $sql = "SELECT * FROM students WHERE id = " . $_SESSION["id"];
                     $result = mysqli_query($db, $sql);
@@ -50,37 +49,40 @@
                     }
                     echo '</h2>';
                 ?>
-            </h1>
+        </h1>
 
-            <h3><a href=".">(Refresh)</a></h3>
-            <ul>
-                <li>
-                    <a href="#acadperf">Academic Performance</a>
-                </li>
-                <li>
-                    <a href="#regcourse">Register for a Course</a>
-                </li>
-                <li>
-                    <a href="#genticket">Generate Ticket</a>
-                </li>
-                <li>
-                    <a href="logout.php">Sign Out</a>
-                </li>
+        <h3><a href=".">(Refresh)</a></h3>
+        <ul>
+            <li>
+                <a href="#acadperf">Academic Performance</a>
+            </li>
+            <li>
+                <a href="#regcourse">Register for a Course</a>
+            </li>
+            <li>
+                <a href="#genticket">Generate Ticket</a>
+            </li>
+            <li>
+                <a href="#viewticket">View Tickets</a>
+            </li>
+            <li>
+                <a href="logout.php">Sign Out</a>
+            </li>
 
-            </ul>
+        </ul>
 
-            <div id="acadperf">
-                <h1>Academic Performance</h1>
-                <h2>Current Courses</h2>
-                <table border=1>
-                    <thead>
-                        <tr>
-                            <th>Course ID</th>
-                            <th>Minimum CGPA</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+        <div id="acadperf">
+            <h1>Academic Performance</h1>
+            <h2>Current Courses</h2>
+            <table border=1>
+                <thead>
+                    <tr>
+                        <th>Course ID</th>
+                        <th>Minimum CGPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
                                 $sql = "SELECT offers.course_id, offers.minimum_cgpa FROM takes, offers WHERE offers.offer_id = takes.offer_id AND takes.student_id = " .  $_SESSION["id"];
                                 $result = mysqli_query($db, $sql);                            
                                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
@@ -90,21 +92,21 @@
                                     echo "</tr>";
                                 }
                     ?>
-                    </tbody>
-                </table>
-                <h2>Completed Courses</h2>
-                <table border=1>
-                    <thead>
-                        <tr>
-                            <th>Course ID</th>
-                            <th>Faculty</th>
-                            <th>Semester</th>
-                            <th>Year</th>
-                            <th>Grade</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
+                </tbody>
+            </table>
+            <h2>Completed Courses</h2>
+            <table border=1>
+                <thead>
+                    <tr>
+                        <th>Course ID</th>
+                        <th>Faculty</th>
+                        <th>Semester</th>
+                        <th>Year</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
                                 $sql = "SELECT * FROM completed, faculty WHERE completed.Student_ID = ". $_SESSION["id"] . " ORDER BY Year, Semester ASC";
                                 $result = mysqli_query($db, $sql); 
                                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
@@ -117,23 +119,23 @@
                                     echo "</tr>";
                                 }
                     ?>
-                    </tbody>
-                </table>
+                </tbody>
+            </table>
 
-            </div>
+        </div>
 
-            <div id="regcourse">
-                <h1>Register for a course</h1>
-                Select Course:
-                <?php
+        <div id="regcourse">
+            <h1>Register for a course</h1>
+            Select Course:
+            <?php
                     if(isset($_POST['register'])){
                         $oid = $_POST['course_register'];  
                     } else {
                         $oid = -1;
                     }
                 ?>
-                    <form action="#" method="post">
-                        <select name="course_register">
+                <form action="#" method="post">
+                    <select name="course_register">
                             <?php
                                 $sql = "SELECT offers.offer_id, offers.course_id, courses.name FROM offers, courses WHERE offers.course_id = courses.course_id";
                                 $result = mysqli_query($db, $sql);
@@ -150,25 +152,24 @@
                                 }
                             ?>
                         </select>
-                        <input type="submit" name="register" value="Register" />
-                    </form>
-                    <?php
+                    <input type="submit" name="register" value="Register" />
+                </form>
+                <?php
                         if (isset($_POST['register'])){
                             $sql = "INSERT INTO Takes(offer_id, student_id) VALUES (" . $oid . "," . $_SESSION["id"] . ")";
                             $result = mysqli_query($db, $sql);
                             if ($result) {
-                                echo "Course successfully registered";
+                                echo "Course successfully registered (Refresh Page)";
                             } else {
                                 echo "Error registering course: " . mysqli_error($db) . " (Try generating a aticket)";
                             }
                         }
                     ?>
 
-            </div>
+        </div>
 
-            <div id="genticket">
-                <h1>Generate a ticket.</h1>
-            </div>
+        <div id="genticket">
+            <h1>Generate a ticket.</h1>
             <form action="#" method="post">
                 <select name="ticket">
                     <?php
@@ -178,9 +179,9 @@
                             while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                                 echo "<option value=\"" . $row["offer_id"] ."\"";
                                 if ($oid == $row["offer_id"]) echo "selected";
-                                echo "><a href=\"#\" class=\"dropdown-item\">";
+                                echo ">";
                                 echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
-                                echo "</a></option>";
+                                echo "</option>";
                             }
                         } else {
                             echo "No offered courses";
@@ -192,7 +193,7 @@
             </form>
             <?php
                 if (isset($_POST['ticket-submit'])) {
-                    $sql = "INSERT INTO Ticket(Offer_ID, Student_ID, Comment, Status) VALUES (" . $oid . "," . $_SESSION["id"] . ",\"" . $_POST["comment"] . "\"," . TICKET_JUST_GENERATED . ")";
+                    $sql = "INSERT INTO Ticket(Offer_ID, Student_ID, Comment, Status) VALUES (" . $_POST["ticket"] . "," . $_SESSION["id"] . ",\"" . $_POST["comment"] . "\"," . TICKET_JUST_GENERATED . ")";
                     $result = mysqli_query($db, $sql);
                     if ($result) {
                         echo "Ticket successfully submitted";
@@ -202,6 +203,27 @@
                 }
             ?>
 
+        </div>
+        
+        <div id="viewticket">
+            <h1>View tickets.</h1>
+            <?php
+                $sql = "SELECT * FROM ticket,offers WHERE Student_ID = ".$_SESSION["id"]." AND offers.offer_id = ticket.offer_id";
+                $result = mysqli_query($db, $sql);
+                if ($result && $result->num_rows>0) {
+                    echo '<table border=1><thead><tr><th>Course ID</th><th>Section ID</th><th>My Comments</th></tr></thead><tbody>';
+                    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                        echo '<tr>';
+                        echo '<td>' . $row["Course_ID"] . '</td>';
+                        echo '<td>' . $row["section_ID"] . '</td>';
+                        echo '<td>' . $row["Comment"] . '</td>';
+                        echo '</tr>';
+                    }
+                    echo '</tbody></table>';
+                } else {
+                    echo "No Tickets!";
+                }
+            ?>
         </div>
     </body>
 
