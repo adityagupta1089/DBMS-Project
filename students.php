@@ -30,9 +30,29 @@
                     echo '<h2>ID: ' . $row['ID'] . '</h2>';
                     echo '<h2>Department: ' . $row['Department'] . '</h2>';
                     echo '<h2>Batch Year: ' . $row['Batch_Year'] . '</h2>';
+                    $sql = "SELECT getCreditsCompleted(".$_SESSION["id"].") AS X";
+                    $result = mysqli_query($db, $sql);
+                    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                    echo '<h2>Completed Credits: ';
+                    if (is_null($row["X"])) {
+                        echo "0";
+                    } else {
+                        echo $row["X"];
+                    }
+                    echo '</h2>';
+                    $sql = "SELECT calculateCGPA(".$_SESSION["id"].") AS X";
+                    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                    echo '<h2>CGPA: ';
+                    if (is_null($row["X"])) {
+                        echo "0";
+                    } else {
+                        echo $row["X"];
+                    }
+                    echo '</h2>';
                 ?>
             </h1>
 
+            <h3><a href=".">(Refresh)</a></h3>
             <ul>
                 <li>
                     <a href="#acadperf">Academic Performance</a>
@@ -51,7 +71,7 @@
 
             <div id="acadperf">
                 <h1>Academic Performance</h1>
-                <h2><a href=".">Refresh</a></h2>
+                <h2>Current Courses</h2>
                 <table border=1>
                     <thead>
                         <tr>
@@ -67,6 +87,33 @@
                                     echo "<tr>";
                                     echo '<th scope="row">' . $row["course_id"] . "</th>";
                                     echo '<td>' . $row["minimum_cgpa"] . '</td>';
+                                    echo "</tr>";
+                                }
+                    ?>
+                    </tbody>
+                </table>
+                <h2>Completed Courses</h2>
+                <table border=1>
+                    <thead>
+                        <tr>
+                            <th>Course ID</th>
+                            <th>Faculty</th>
+                            <th>Semester</th>
+                            <th>Year</th>
+                            <th>Grade</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                                $sql = "SELECT * FROM completed, faculty WHERE completed.Student_ID = ". $_SESSION["id"] . " ORDER BY Year, Semester ASC";
+                                $result = mysqli_query($db, $sql); 
+                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                    echo "<tr>";                                    
+                                    echo '<th scope="row">' . $row["Course_ID"] . "</th>";
+                                    echo '<td>' . $row["Name"] . '</td>';
+                                    echo '<td>' . $row["Semester"] . '</td>';
+                                    echo '<td>' . $row["Year"] . '</td>';
+                                    echo '<td>' . $row["grade"] . '</td>';
                                     echo "</tr>";
                                 }
                     ?>
@@ -89,13 +136,17 @@
                         <select name="course_register">
                             <?php
                                 $sql = "SELECT offers.offer_id, offers.course_id, courses.name FROM offers, courses WHERE offers.course_id = courses.course_id";
-                                $result = mysqli_query($db, $sql);                            
-                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                                    echo "<option value=\"" . $row["offer_id"] ."\"";
-                                    if ($oid == $row["offer_id"]) echo "selected";
-                                    echo ">";
-                                    echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
-                                    echo "</option>";
+                                $result = mysqli_query($db, $sql);
+                                if ($result){
+                                    while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                        echo "<option value=\"" . $row["offer_id"] ."\"";
+                                        if ($oid == $row["offer_id"]) echo "selected";
+                                        echo ">";
+                                        echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
+                                        echo "</option>";
+                                    }
+                                } else {
+                                    echo "No offered courses";
                                 }
                             ?>
                         </select>
@@ -122,27 +173,31 @@
                 <select name="ticket">
                     <?php
                         $sql = "SELECT offers.offer_id, offers.course_id, courses.name FROM offers, courses WHERE offers.course_id = courses.course_id";
-                        $result = mysqli_query($db, $sql);                            
-                        while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                            echo "<option value=\"" . $row["offer_id"] ."\"";
-                            if ($oid == $row["offer_id"]) echo "selected";
-                            echo "><a href=\"#\" class=\"dropdown-item\">";
-                            echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
-                            echo "</a></option>";
+                        $result = mysqli_query($db, $sql); 
+                        if ($result){
+                            while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                echo "<option value=\"" . $row["offer_id"] ."\"";
+                                if ($oid == $row["offer_id"]) echo "selected";
+                                echo "><a href=\"#\" class=\"dropdown-item\">";
+                                echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
+                                echo "</a></option>";
+                            }
+                        } else {
+                            echo "No offered courses";
                         }
                     ?>
                 </select><br>
-                <textarea name="comment" form="usrform" placeholder="Comments" style="margin-top:20px;width:400px;height:70px;"></textarea><br>
-                <input type="submit" name="ticket-submit" value="Submit Ticket" style="margin-top:20px;"/>
+                <textarea name="comment" placeholder="Comments" style="margin-top:20px;width:400px;height:70px;"></textarea><br>
+                <input type="submit" name="ticket-submit" value="Submit Ticket" style="margin-top:20px;" />
             </form>
             <?php
                 if (isset($_POST['ticket-submit'])) {
-                    $sql = "INSERT INTO Tickets(Offer_ID, Student_ID, Status) VALUES (" . $oid . "," . $_SESSION["id"] . ", 0)";
+                    $sql = "INSERT INTO Ticket(Offer_ID, Student_ID, Comment, Status) VALUES (" . $oid . "," . $_SESSION["id"] . ",\"" . $_POST["comment"] . "\"," . TICKET_JUST_GENERATED . ")";
                     $result = mysqli_query($db, $sql);
                     if ($result) {
                         echo "Ticket successfully submitted";
                     } else {
-                        echo "Error submitting ticket";
+                        echo "Error submitting ticket: " . mysqli_error($db);
                     }
                 }
             ?>
