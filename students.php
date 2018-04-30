@@ -108,7 +108,7 @@
                 </thead>
                 <tbody>
                     <?php
-                                $sql = "SELECT * FROM completed, faculty WHERE completed.Student_ID = ". $_SESSION["id"] . " ORDER BY Year, Semester ASC";
+                                $sql = "SELECT * FROM completed, faculty WHERE completed.faculty_ID=faculty.faculty_ID AND completed.Student_ID = ". $_SESSION["id"] . " ORDER BY Year, Semester ASC";
                                 $result = mysqli_query($db, $sql); 
                                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                                     echo "<tr>";                                    
@@ -212,12 +212,13 @@
                 $sql = "SELECT * FROM ticket,offers WHERE Student_ID = ".$_SESSION["id"]." AND offers.offer_id = ticket.offer_id";
                 $result = mysqli_query($db, $sql);
                 if ($result && $result->num_rows>0) {
-                    echo '<table border=1><thead><tr><th>Course ID</th><th>Section ID</th><th>My Comments</th></tr></thead><tbody>';
+                    echo '<table border=1><thead><tr><th>Course ID</th><th>Section ID</th><th>My Comments</th><th>Status</th></tr></thead><tbody>';
                     while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
                         echo '<tr>';
                         echo '<td>' . $row["Course_ID"] . '</td>';
                         echo '<td>' . $row["section_ID"] . '</td>';
                         echo '<td>' . $row["Comment"] . '</td>';
+                        echo '<td>' . $row["Status"] . '</td>';
                         echo '</tr>';
                     }
                     echo '</tbody></table>';

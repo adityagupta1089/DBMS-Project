@@ -99,7 +99,7 @@
             <h1>Update Grades</h1>
             <form action="#" method="post">
                 <?php
-                        $sql = "SELECT * FROM offers WHERE faculty_id = ".$_SESSION["id"]; 
+                        $sql = "SELECT * FROM offers WHERE completed=0 and faculty_id = ".$_SESSION["id"]; 
                         $result = mysqli_query($db, $sql);
                         if ($result && $result->num_rows>0) {
                             echo '<select name="getcourse">';
@@ -142,7 +142,7 @@
                             $sql = 'CALL updateGrade('.$row["Student_ID"].','.$_POST[$row["Student_ID"]].','.$_POST["offer_id"].')';
                             $result2 = mysqli_query($db, $sql);
                             if ($result2) {
-                                echo "Update grade for Student ID " . $row['Student_ID'];
+                                echo "Updated grade for Student ID " . $row['Student_ID'];
                             } else {
                                 echo "Update grade failed for Student ID " . $row['Student_ID'] . " (".mysqli_error($db).")";
                             }

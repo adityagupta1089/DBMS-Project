@@ -46,7 +46,7 @@
 
     </head>
 
-    <body style="margin:50px;">
+    <body>
         <!-- Title -->
         <h1 class>Login into Academic Portal</h1>
 
