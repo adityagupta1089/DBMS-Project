@@ -127,7 +127,7 @@
         <div id="manage_tickets">
             <h1>Manage Tickets</h1>
             <?php
-                $sql = "SELECT * FROM ticket,offers WHERE  offers.offer_ID = ticket.offer_id AND status = ".ACCEPTED_FORWARDED_HOD ;
+                $sql = "SELECT * FROM ticket,offers WHERE  offers.offer_ID = ticket.offer_id AND offers.completed=0 AND status = ".ACCEPTED_FORWARDED_HOD ;
                 $result = mysqli_query($db, $sql);
                 if ($result && $result->num_rows>0) {
                     echo '<form action="#" method="post">
