@@ -204,7 +204,7 @@
             ?>
 
         </div>
-        
+
         <div id="viewticket">
             <h1>View tickets.</h1>
             <?php

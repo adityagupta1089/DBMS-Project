@@ -98,7 +98,7 @@
         <div id="update_grade">
             <h1>Update Grades</h1>
             <form action="#" method="post">
-                    <?php
+                <?php
                         $sql = "SELECT * FROM offers WHERE faculty_id = ".$_SESSION["id"]; 
                         $result = mysqli_query($db, $sql);
                         if ($result && $result->num_rows>0) {
@@ -206,8 +206,8 @@
         <div id="offer_course">
             <h1>Offer Course</h1>
             <form action="#" method="post">
-                
-                    <?php
+
+                <?php
                         $sql = "SELECT * FROM courses";
                         $result = mysqli_query($db, $sql); 
                         if ($result && $result->num_rows>0){
@@ -220,7 +220,7 @@
                             echo "No courses";
                         }
                     ?>
-                <input type="submit" name="offer" value="Offer Course" />
+                    <input type="submit" name="offer" value="Offer Course" />
             </form>
             <?php
                 if (isset($_POST["offer"])) {
