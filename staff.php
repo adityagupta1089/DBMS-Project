@@ -44,7 +44,7 @@
                 <form action="#" method="post">
                 <select name="viewgrades">
                     <?php
-                        $sql = ""; // select all those courses which this teacher has completed
+                        $sql = ""; // select all those courses which are completed
                         $result = mysqli_query($db, $sql);                            
                         while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                             //insert into select
