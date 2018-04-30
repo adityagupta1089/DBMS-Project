@@ -19,29 +19,27 @@
     </head>
 
     <body style="margin:50px;">
-        <div class="container">
+        <h1>Welcome
+            <?php echo $login_session; ?>
+        </h1>
 
-            <h1>Welcome
-                <?php echo $login_session; ?>
-            </h1>
+        <ul>
+            <li class="active">
+                <a href="#view_grade">View Grades</a>
 
-            <ul>
-                <li class="active">
-                    <a href="#view_grade">View Grades</a>
-
-                </li>
-                <li>
-                    <a href="#report_generation">Report Generation</a>
-                </li>
-                <li>
-                    <a href="logout.php">Sign Out</a>
-                </li>
-            </ul>
+            </li>
+            <li>
+                <a href="#report_generation">Report Generation</a>
+            </li>
+            <li>
+                <a href="logout.php">Sign Out</a>
+            </li>
+        </ul>
 
 
-            <div id="view_grade">
-                <h1>View Grades</h1>
-                <form action="#" method="post">
+        <div id="view_grade">
+            <h1>View Grades</h1>
+            <form action="#" method="post">
                 <select name="viewgrades">
                     <?php
                         $sql = ""; // select all those courses which are completed
@@ -62,12 +60,10 @@
                     }
                 }
             ?>
-            </div>
+        </div>
 
-            <div id="report_generation">
-                <h1>Generate Reports</h1>
-            </div>
-
+        <div id="report_generation">
+            <h1>Generate Reports</h1>
         </div>
     </body>
 

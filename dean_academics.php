@@ -19,8 +19,6 @@
     </head>
 
     <body style="margin:50px;">
-        <div class="container">
-
             <h1>Welcome
                 <?php echo $login_session; ?>
             </h1>
@@ -28,7 +26,7 @@
             <div>
                 <ul>
                     <li>
-                        <a href="#acadperf">Academic Performance</a>
+                        <a href="#viewgrades">View Grades </a>
                     </li>
                     <li>
                         <a href="#adddelcourses">Add/Delete Courses</a>
@@ -43,34 +41,9 @@
                 </ul>
             </div>
 
-            <div id="acadperf">
-                <h1>Academic Performance</h1>
-                <table border=1>
-                    <thead>
-                        <tr>
-                            <th>Course ID</th>
-                            <th>Minimum CGPA</th>
-                            <th>Grade</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                                $sql = "SELECT offers.course_id, offers.minimum_cgpa, takes.grade FROM takes, offers WHERE offers.offer_id = takes.offer_id AND takes.student_id =" .  $_SESSION["id"];
-                                $result = mysqli_query($db, $sql);                            
-                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                                    echo "<tr>";
-                                    echo '<th scope="row">' . $row["course_id"] . "</th>";
-                                    echo '<td>' . $row["minimum_cgpa"] . '</td>';
-                                    if ($row["grade"]) {
-                                        echo '<td>' . $row["grade"] . '</td>';
-                                    } else {
-                                        echo '<td>Not Yet Completed</td>';
-                                    }
-                                    echo "</tr>";
-                                }
-                    ?>
-                    </tbody>
-                </table>
+            <div id="viewgrades">
+                <h1>View Grades</h1>
+                
 
             </div>
 
@@ -119,8 +92,6 @@
                     }
             ?>
             </div>
-
-        </div>
     </body>
 
     </html>

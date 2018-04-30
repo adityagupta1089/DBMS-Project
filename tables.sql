@@ -464,13 +464,9 @@ DELIMITER ;
 CREATE TABLE IF NOT EXISTS `ticket` (
   `Offer_ID` int(11) NOT NULL,
   `Student_ID` int(11) NOT NULL,
-  `Course_ID` varchar(100) NOT NULL,
-  `Faculty_ID` int(11) NOT NULL,
   `Status` int(11) NOT NULL,
   `Comment` text NOT NULL,
   PRIMARY KEY (`Offer_ID`,`Student_ID`),
-  KEY `Course_ID` (`Course_ID`),
-  KEY `Faculty_ID` (`Faculty_ID`),
   KEY `Student_ID` (`Student_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
