@@ -58,7 +58,7 @@
                 <?php
                         $sql = "SELECT DISTINCT course_id, semester, year FROM completed WHERE faculty_id = " . $_SESSION["id"]; 
                         $result = mysqli_query($db, $sql);  
-                        if ($result->num_rows>0) {
+                        if ($result && $result->num_rows>0) {
                             echo '<select name="viewgrades">';
                             while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                                 echo '<option value="'.$row["course_id"].','.$row["semester"] .',' . $row["year"] . '">';
