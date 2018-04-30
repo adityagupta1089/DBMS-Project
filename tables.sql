@@ -203,29 +203,6 @@ INSERT INTO `allowed_batches` (`Offer_ID`, `Department`, `Batch_year`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `classroom`
---
-
-DROP TABLE IF EXISTS `classroom`;
-CREATE TABLE IF NOT EXISTS `classroom` (
-  `Building` varchar(100) NOT NULL,
-  `Room_no.` int(11) NOT NULL,
-  `Capacity` int(11) NOT NULL,
-  PRIMARY KEY (`Building`,`Room_no.`),
-  KEY `Room_no.` (`Room_no.`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `classroom`
---
-
-INSERT INTO `classroom` (`Building`, `Room_no.`, `Capacity`) VALUES
-('B1', 1, 100),
-('B2', 2, 100);
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `completed`
 --
 
@@ -688,8 +665,6 @@ ALTER TABLE `prerequisites`
 -- Constraints for table `section`
 --
 ALTER TABLE `section`
-  ADD CONSTRAINT `section_ibfk_2` FOREIGN KEY (`Building`) REFERENCES `classroom` (`Building`),
-  ADD CONSTRAINT `section_ibfk_3` FOREIGN KEY (`Room_no`) REFERENCES `classroom` (`Room_no.`),
   ADD CONSTRAINT `section_ibfk_4` FOREIGN KEY (`Time_slot_ID`) REFERENCES `time_slot` (`Time_slot_ID`);
 
 --

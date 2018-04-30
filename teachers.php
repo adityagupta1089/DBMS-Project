@@ -229,22 +229,51 @@
                                 }
                                 echo '</select>';
                             } else {
-                                echo "No courses";
+                                echo "No courses (" . mysqli_error($db) . ")";
                             }                        
                     ?>
                     <br>
-                    Minimum CGPA: <input type="number" name="offermincgpa"><br>                    
+                    Minimum CGPA: <input type="number" name="offermincgpa"><br>  
+                    Offered Batches: <br>
+                    <?php
+                        $sql = "SELECT DISTINCT department, batch_year FROM students";
+                        $result = mysqli_query($db, $sql);
+                        if($result && $result->num_rows>0) {
+                            while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                echo '<input type="checkbox" name="batch[]" value="'.implode(',',$row).'" />'.implode(' ',$row).'<br>';
+                            }
+                        } else {
+                            echo "No batches (" . mysqli_error($db) . ")";
+                        }
+                        
+                    ?>
                     <input type="submit" name="offer" value="Offer Course" />
             </form>
             <?php
                 if (isset($_POST["offer"])) {
-                    $sql = "INSERT INTO offers VALUES(Course_ID,Faculty_ID,section_ID,Minimum_CGPA) (".$_POST["offercourse"].",".$_SESSION["id"].",".$_POST["offersection"].",".$_POST["offermincgpa"].")"; 
-                    $result = mysqli_query($db, $sql);
-                    if ($result) {
-                        echo "Successfully added offer";
+                    if (empty($_POST["batch"])) {
+                        echo "No batch Selected";
                     } else {
-                        echo "Unsuccessful offer adding" . mysqli_error($db);
-                    }
+                        $sql = "INSERT INTO offers (Course_ID,Faculty_ID,section_ID,Minimum_CGPA) VALUES (\"".$_POST["offercourse"]."\",".$_SESSION["id"].",".$_POST["offersection"].",".$_POST["offermincgpa"].")";
+                        $result = mysqli_query($db, $sql);
+                        if ($result) {
+                            echo "Successfully added offer<br>";
+                        } else {
+                            echo "Unsuccessful offer adding". "(" . mysqli_error($db) . ")<br>";
+                        }
+                        $n = count($_POST["batch"]);
+                        $oid = mysqli_insert_id($db);
+                        for($i=0;$i<$n;$i++){
+                            $vals = explode(',',$_POST["batch"][$i]);
+                            $sql = "INSERT INTO allowed_batches(Offer_ID, Department, Batch_Year) VALUES (".$oid.",\"".$vals[0]."\",\"".$vals[1]."\")";
+                            $result = mysqli_query($db, $sql);
+                            if ($result) {
+                                echo "Successfully added batch " . implode(' ', $vals) . "<br>";
+                            } else {
+                                echo "Unsuccessful in adding batch " . implode(' ', $vals) . " (" . mysqli_error($db) . ")<br>";
+                            }
+                        }
+                    }                   
                 }
             ?>
         </div>

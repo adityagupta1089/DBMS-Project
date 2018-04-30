@@ -30,7 +30,7 @@
             ?>
         </h1>
 
-
+        <h3><a href=".">(Refresh)</a></h3>
         <ul>
             <li class="active">
                 <a href="#view_grade">View Grades</a>
@@ -63,7 +63,7 @@
                             echo '</select>';
                             echo '<input type="submit" name="view" value="View Grades" />';
                         } else {
-                            echo 'No of your courses found!' . mysqli_error($db);
+                            echo 'No of your courses found!' . " (" . mysqli_error($db) . ")";
                         }
                     ?>
 
@@ -84,7 +84,7 @@
                         }
                         echo '</tbody></table>';
                     } else {
-                        echo "No students" . mysqli_error($db);
+                        echo "No students" . " (" . mysqli_error($db) . ")";
                     }
                 }
             ?>
@@ -117,7 +117,7 @@
                     }
                     echo '</tbody></table></form>';
                 } else {
-                    echo "No relevant tickets" . mysqli_error($db);
+                    echo "No relevant tickets" . " (" . mysqli_error($db) . ")";
                 }
                 if (isset($_POST["action"])) {
                     $student_id = $_POST["student_id"];
@@ -138,7 +138,7 @@
                     if ($result) {
                         echo 'Action '.$_POST["action"]." succeeded (Refresh page)";
                     } else {
-                        echo 'Action '.$_POST["action"]." failed" . mysqli_error($db);
+                        echo 'Action '.$_POST["action"]." failed" . " (" . mysqli_error($db) . ")";
                     }
                 }
             ?>

@@ -149,7 +149,7 @@
                                         echo "</option>";
                                     }
                                 } else {
-                                    echo "No offered courses" . mysqli_error($db);
+                                    echo "No offered courses" . " (" . mysqli_error($db) . ")";
                                 }
                             ?>
                         </select>
@@ -162,7 +162,7 @@
                             if ($result) {
                                 echo "Course successfully registered (Refresh Page)";
                             } else {
-                                echo "Error registering course: " . mysqli_error($db) . " (Try generating a aticket)";
+                                echo "Error registering course: " . " (" . mysqli_error($db) . ")" . " (Try generating a aticket)";
                             }
                         }
                     ?>
@@ -185,7 +185,7 @@
                                 echo "</option>";
                             }
                         } else {
-                            echo "No offered courses" . mysqli_error($db);
+                            echo "No offered courses" . " (" . mysqli_error($db) . ")";
                         }
                     ?>
                 </select><br>
@@ -199,7 +199,7 @@
                     if ($result) {
                         echo "Ticket successfully submitted";
                     } else {
-                        echo "Error submitting ticket: " . mysqli_error($db);
+                        echo "Error submitting ticket: " . " (" . mysqli_error($db) . ")";
                     }
                 }
             ?>
@@ -223,7 +223,7 @@
                     }
                     echo '</tbody></table>';
                 } else {
-                    echo "No Tickets!" . mysqli_error($db);
+                    echo "No Tickets!" . " (" . mysqli_error($db) . ")";
                 }
             ?>
         </div>

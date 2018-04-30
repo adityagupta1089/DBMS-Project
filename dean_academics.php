@@ -19,8 +19,8 @@
     </head>
 
     <body style="margin:50px;">
-            <h1>Welcome
-                <?php 
+        <h1>Welcome
+            <?php 
                 echo $login_session; 
                 $sql = "SELECT * FROM faculty WHERE faculty_id = " . $_SESSION["id"];
                 $result = mysqli_query($db, $sql);
@@ -28,27 +28,28 @@
                 echo '<h2>ID: ' . $row['Faculty_ID'] . '</h2>';
                
             ?>
-            </h1>
+        </h1>
+        
+        <h3><a href=".">(Refresh)</a></h3>
+        <div>
+            <ul>
+                <li>
+                    <a href="#viewgrades">View Grades </a>
+                </li>
+                <li>
+                    <a href="#addcourses">Add Courses</a>
+                </li>
+                <li>
+                    <a href="#manage_tickets">Manage Tickets</a>
+                </li>
+                <li>
+                    <a href="logout.php">Sign Out</a>
+                </li>
 
-            <div>
-                <ul>
-                    <li>
-                        <a href="#viewgrades">View Grades </a>
-                    </li>
-                    <li>
-                        <a href="#adddelcourses">Add/Delete Courses</a>
-                    </li>
-                    <li>
-                        <a href="#manage_tickets">Manage Tickets</a>
-                    </li>
-                    <li>
-                        <a href="logout.php">Sign Out</a>
-                    </li>
+            </ul>
+        </div>
 
-                </ul>
-            </div>
-
-            <div id="view_grade">
+        <div id="view_grade">
             <h1>View Grades</h1>
             <form action="#" method="post">
                 <?php
@@ -64,7 +65,7 @@
                             echo '</select>';
                             echo '<input type="submit" name="view" value="View Grades" />';
                         } else {
-                            echo 'None of your courses are completed!' . mysqli_error($db);
+                            echo 'None of your courses are completed!' . " (" . mysqli_error($db) . ")";
                         }
                     ?>
 
@@ -85,48 +86,45 @@
                         }
                         echo '</tbody></table>';
                     } else {
-                        echo "No students" . mysqli_error($db);
+                        echo "No students" . " (" . mysqli_error($db) . ")";
                     }
                 }
             ?>
         </div>
 
-            <div id="adddelcourses">
-                <h1>Add a new course</h1>
-                Select Course:
-                <form action="#" method="post">
-                    Course ID: <input type="text" name="courseid"><br>
-                    L: <input type="number" name="l"><br>
-                    T: <input type="number" name="t"><br>
-                    P: <input type="number" name="p"><br>
-                    Name: <input type="text" name="name"><br>
-                    Department:
-                    <select>
+        <div id="addcourses">
+            <h1>Add a new course</h1>
+            Select Course:
+            <form action="#" method="post">
+                Course ID: <input type="text" name="courseid"><br> L: <input type="number" name="l"><br> T: <input type="number" name="t"><br> P: <input type="number" name="p"><br> Name: <input type="text" name="name"><br> Department:
+                <select name="adddep">
                         <?php
                             $sql = "SELECT * FROM department";
                             $result = mysqli_query($db, $sql);
                             while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-                                echo '<option value="' . $row["name"] . '">';
+                                echo '<option value="' . $row["Name"] . '">';
+                                echo $row["Name"];
                                 echo '</option>';
                             }
                         ?>
                     </select>
-                </form>
+                <br>
                 <input type="submit" name="add" value="Add Course" />
-                <?php
+            </form>
+            <?php
                     if (isset($_POST["add"])) {
-                        $sql = "INSERT INTO Courses VALUES (". $_POST['courseid'] . "," . $_POST['l'] . "," . $_POST['t'] . "," . $_POST['p'] . "," . $_POST['name'] . ")";
+                        $sql = "INSERT INTO Courses(Course_ID,L,T,P,Name,Department) VALUES (\"". $_POST['courseid'] . "\"," . $_POST['l'] . "," . $_POST['t'] . "," . $_POST['p'] . ",\"" . $_POST['name'] . "\",\"".$_POST["adddep"]."\")";
                         $result = mysqli_query($db, $sql);
                         if ($result) {
                             echo "Successfully added course";
                         } else {
-                            echo "Not successful" . mysqli_error($db);
+                            echo "Not successful" . " (" . mysqli_error($db) . ")";
                         }
                     }
                 ?>
-            </div>
+        </div>
 
-            <div id="manage_tickets">
+        <div id="manage_tickets">
             <h1>Manage Tickets</h1>
             <?php
                 $sql = "SELECT * FROM ticket,offers WHERE  offers.offer_ID = ticket.offer_id AND status = ".ACCEPTED_FORWARDED_HOD ;
@@ -151,7 +149,7 @@
                     }
                     echo '</tbody></table></form>';
                 } else {
-                    echo "No relevant tickets" . mysqli_error($db);
+                    echo "No relevant tickets" . " (" . mysqli_error($db) . ")";
                 }
                 if (isset($_POST["action"])) {
                     $student_id = $_POST["student_id"];
@@ -170,7 +168,7 @@
                     if ($result) {
                         echo 'Action '.$_POST["action"]." succeeded (Refresh page)";
                     } else {
-                        echo 'Action '.$_POST["action"]." failed" . mysqli_error($db);
+                        echo 'Action '.$_POST["action"]." failed" . " (" . mysqli_error($db) . ")";
                     }
                 }
             ?>
