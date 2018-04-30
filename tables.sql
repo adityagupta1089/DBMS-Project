@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.8.0.1
+-- version 4.8.0
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 30, 2018 at 08:33 PM
--- Server version: 10.1.29-MariaDB
--- PHP Version: 7.1.12
+-- Generation Time: Apr 30, 2018 at 09:55 PM
+-- Server version: 10.1.31-MariaDB
+-- PHP Version: 7.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -148,27 +148,6 @@ DELIMITER ;
 -- --------------------------------------------------------
 
 --
--- Table structure for table `account`
---
-
-DROP TABLE IF EXISTS `account`;
-CREATE TABLE IF NOT EXISTS `account` (
-  `acct_num` int(11) DEFAULT NULL,
-  `amount` decimal(10,2) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Triggers `account`
---
-DROP TRIGGER IF EXISTS `ins_sum`;
-DELIMITER $$
-CREATE TRIGGER `ins_sum` BEFORE INSERT ON `account` FOR EACH ROW SET @sum = @sum + NEW.amount
-$$
-DELIMITER ;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `admin`
 --
 
@@ -178,8 +157,7 @@ CREATE TABLE IF NOT EXISTS `admin` (
   `Password` char(32) NOT NULL,
   `Category` int(11) NOT NULL,
   `ID` int(11) NOT NULL,
-  PRIMARY KEY (`Username`),
-  UNIQUE KEY `ID` (`ID`)
+  PRIMARY KEY (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -187,13 +165,12 @@ CREATE TABLE IF NOT EXISTS `admin` (
 --
 
 INSERT INTO `admin` (`Username`, `Password`, `Category`, `ID`) VALUES
-('abcd', '1234', 0, 1),
-('aditya', '1234', 0, 0),
-('dota', 'abcd', 4, 88),
-('hoodie', 'abcd', 3, 11),
-('mudgal', 'abcd', 1, 5),
-('staffi', 'abcd', 2, 10),
-('vinit', 'abcd', 0, 2);
+('DeanSA', 'abcd', 4, 6),
+('facy', 'abcd', 5, 4),
+('hoodie', 'abcd', 3, 1),
+('mudgal', 'abcd', 1, 1),
+('raghu', 'abcd', 2, 41),
+('vinit', 'abcd', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -272,7 +249,8 @@ CREATE TABLE IF NOT EXISTS `completed` (
 INSERT INTO `completed` (`Course_ID`, `Faculty_ID`, `Semester`, `Year`, `grade`, `Student_ID`) VALUES
 ('MEL101', 2, 'fall', 2016, 8, 2),
 ('EEL101', 3, 'spring', 2017, 7, 5),
-('CSL101', 1, 'spring', 2015, 9, 1);
+('CSL101', 1, 'spring', 2015, 9, 1),
+('CSL101', 1, 'spring', 2015, 7, 2);
 
 -- --------------------------------------------------------
 
@@ -443,7 +421,7 @@ CREATE TABLE IF NOT EXISTS `offers` (
 --
 
 INSERT INTO `offers` (`Course_ID`, `Faculty_ID`, `Offer_ID`, `section_ID`, `Minimum_CGPA`, `Completed`) VALUES
-('CSL101', 1, 1, 1, 0, 0),
+('CSL101', 1, 1, 1, 0, 1),
 ('MEL101', 2, 2, 1, 0, 1),
 ('EEL101', 3, 3, 1, 0, 0),
 ('CSL202', 4, 5, 2, 10, 0),
@@ -606,6 +584,15 @@ CREATE TABLE IF NOT EXISTS `ticket` (
   PRIMARY KEY (`Offer_ID`,`Student_ID`),
   KEY `Student_ID` (`Student_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `ticket`
+--
+
+INSERT INTO `ticket` (`Offer_ID`, `Student_ID`, `Status`, `Comment`) VALUES
+(1, 1, 4, 'hi sir'),
+(3, 2, 6, 'jus lyk that'),
+(8, 1, 0, 'hello. pls accept');
 
 -- --------------------------------------------------------
 

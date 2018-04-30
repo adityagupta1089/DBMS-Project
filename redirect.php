@@ -11,5 +11,7 @@
         header("location:hod.php");
     } elseif ($_SESSION['position'] == DEAN_ACADEMICS) {
         header("location:dean_academics.php");
+    } elseif ($_SESSION['position'] == FACULTY_ADVISOR) {
+        header("location:faculty_advisor.php");
     }
 ?>

@@ -1,8 +1,8 @@
 <?php
     include('session.php');
     include("constants.php");
-    if (!isset($_SESSION['position']) || $_SESSION['position'] != HOD) {
-        echo "Your login does not enatil HOD portal";
+    if (!isset($_SESSION['position']) || $_SESSION['position'] != FACULTY_ADVISOR) {
+        echo "Your login does not enatil Faculty Advisor portal";
         die();
     }
 ?>
@@ -51,9 +51,9 @@
             <form action="#" method="post">
                 <?php
                         $sql = "SELECT DISTINCT completed.course_id, completed.semester, year FROM completed,courses WHERE courses.Course_ID = completed.Course_ID AND courses.Department = (SELECT Department FROM
-                        faculty WHERE faculty.Faculty_ID = ".$_SESSION["id"].")";  
+                        faculty WHERE faculty.Faculty_ID = ".$_SESSION["id"].")"; 
                         $result = mysqli_query($db, $sql);  
-                        if ($result->num_rows>0) {
+                        if ($result && $result->num_rows>0) {
                             echo '<select name="viewgrades">';
                             while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                                 echo '<option value="'.$row["course_id"].','.$row["semester"] .',' . $row["year"] . '">';
@@ -63,7 +63,7 @@
                             echo '</select>';
                             echo '<input type="submit" name="view" value="View Grades" />';
                         } else {
-                            echo 'None of your courses are completed!';
+                            echo 'No of your courses found!';
                         }
                     ?>
 
@@ -95,7 +95,7 @@
             <?php
                 $sql = "SELECT * FROM ticket,offers,courses WHERE  offers.offer_ID = ticket.offer_id AND courses.Course_ID=offers.Course_ID AND
                 courses.Department=(SELECT Department FROM faculty WHERE Faculty_ID =".$_SESSION["id"] ." )
-                AND status = ".ACCEPTED_FORWARDED_FA ;
+                AND status = ".ACCEPTED_FORWARDED_FACULTY ;
                 $result = mysqli_query($db, $sql);
                 if ($result && $result->num_rows>0) {
                     echo '<form action="#" method="post">
@@ -124,13 +124,13 @@
                     $offer_id = $_POST["offer_id"];
                     switch ($_POST["action"]) {
                         case 'Accept':
-                            $status = ACCEPTED_CLOSED_HOD;
+                            $status = ACCEPTED_CLOSED_FA;
                             break;
                         case 'Reject':
-                            $status = REJECTED_HOD;
+                            $status = REJECTED_FA;
                             break;
                         case 'Forward':
-                            $status = ACCEPTED_FORWARDED_HOD;
+                            $status = ACCEPTED_FORWARDED_FA;
                             break;
                     }
                     $sql = "UPDATE ticket SET status=".$status." WHERE Student_ID=".$student_id." AND Offer_ID=".$offer_id;
@@ -143,6 +143,7 @@
                 }
             ?>
         </div>
+
 
 
     </body>
