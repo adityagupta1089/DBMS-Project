@@ -64,7 +64,7 @@
                             echo '</select>';
                             echo '<input type="submit" name="view" value="View Grades" />';
                         } else {
-                            echo 'None of your courses are completed!';
+                            echo 'None of your courses are completed!' . mysqli_error($db);
                         }
                     ?>
 
@@ -85,7 +85,7 @@
                         }
                         echo '</tbody></table>';
                     } else {
-                        echo "No students";
+                        echo "No students" . mysqli_error($db);
                     }
                 }
             ?>
@@ -120,7 +120,7 @@
                         if ($result) {
                             echo "Successfully added course";
                         } else {
-                            echo "Not successful";
+                            echo "Not successful" . mysqli_error($db);
                         }
                     }
                 ?>
@@ -151,7 +151,7 @@
                     }
                     echo '</tbody></table></form>';
                 } else {
-                    echo "No relevant tickets";
+                    echo "No relevant tickets" . mysqli_error($db);
                 }
                 if (isset($_POST["action"])) {
                     $student_id = $_POST["student_id"];
@@ -170,7 +170,7 @@
                     if ($result) {
                         echo 'Action '.$_POST["action"]." succeeded (Refresh page)";
                     } else {
-                        echo 'Action '.$_POST["action"]." failed";
+                        echo 'Action '.$_POST["action"]." failed" . mysqli_error($db);
                     }
                 }
             ?>

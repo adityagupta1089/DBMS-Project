@@ -149,7 +149,7 @@
                                         echo "</option>";
                                     }
                                 } else {
-                                    echo "No offered courses";
+                                    echo "No offered courses" . mysqli_error($db);
                                 }
                             ?>
                         </select>
@@ -185,7 +185,7 @@
                                 echo "</option>";
                             }
                         } else {
-                            echo "No offered courses";
+                            echo "No offered courses" . mysqli_error($db);
                         }
                     ?>
                 </select><br>
@@ -223,7 +223,7 @@
                     }
                     echo '</tbody></table>';
                 } else {
-                    echo "No Tickets!";
+                    echo "No Tickets!" . mysqli_error($db);
                 }
             ?>
         </div>
