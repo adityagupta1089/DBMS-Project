@@ -93,9 +93,9 @@
                                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                                     echo "<option value=\"" . $row["offer_id"] ."\"";
                                     if ($oid == $row["offer_id"]) echo "selected";
-                                    echo "><a href=\"#\" class=\"dropdown-item\">";
+                                    echo ">";
                                     echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
-                                    echo "</a></option>";
+                                    echo "</option>";
                                 }
                             ?>
                         </select>
