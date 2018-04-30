@@ -33,11 +33,35 @@
                 <li>
                     <a href="#report_generation">Report Generation</a>
                 </li>
+                <li>
+                    <a href="logout.php">Sign Out</a>
+                </li>
             </ul>
 
 
             <div id="view_grade">
                 <h1>View Grades</h1>
+                <form action="#" method="post">
+                <select name="viewgrades">
+                    <?php
+                        $sql = ""; // select all those courses which this teacher has completed
+                        $result = mysqli_query($db, $sql);                            
+                        while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                            //insert into select
+                        }
+                    ?>
+                </select>
+                <input type="submit" name="view" value="View Grades" />
+            </form>
+            <?php
+                if (isset($_POST["view"])) {
+                    $sql = ""; //select grades of students from that course
+                    $result = mysqli_query($db, $sql);
+                    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                        //print row
+                    }
+                }
+            ?>
             </div>
 
             <div id="report_generation">

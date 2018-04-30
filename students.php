@@ -22,7 +22,15 @@
         <div class="container">
 
             <h1>Welcome
-                <?php echo $login_session; ?>
+                <?php 
+                    echo $login_session; 
+                    $sql = "SELECT * FROM students WHERE id = " . $_SESSION["id"];
+                    $result = mysqli_query($db, $sql);
+                    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                    echo '<h2>ID: ' . $row['ID'] . '</h2>';
+                    echo '<h2>Department: ' . $row['Department'] . '</h2>';
+                    echo '<h2>Batch Year: ' . $row['Batch_Year'] . '</h2>';
+                ?>
             </h1>
 
             <ul>
