@@ -589,7 +589,4 @@ ALTER TABLE `takes`
 -- Constraints for table `ticket`
 --
 ALTER TABLE `ticket`
-  ADD CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`Offer_ID`) REFERENCES `offers` (`Offer_ID`),
-  ADD CONSTRAINT `ticket_ibfk_2` FOREIGN KEY (`Student_ID`) REFERENCES `section` (`Section_ID`),
-  ADD CONSTRAINT `ticket_ibfk_4` FOREIGN KEY (`Faculty_ID`) REFERENCES `faculty` (`Faculty_ID`),
-  ADD CONSTRAINT `ticket_ibfk_5` FOREIGN KEY (`Course_ID`) REFERENCES `courses` (`Course_ID`);
+  ADD CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`Offer_ID`) REFERENCES `offers` (`Offer_ID`);
