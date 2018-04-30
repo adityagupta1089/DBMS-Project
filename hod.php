@@ -19,7 +19,9 @@
     </head>
 
     <body style="margin:50px;">
-        <h1>Welcome <?php echo $login_session; ?></h1>
+        <h1>Welcome
+            <?php echo $login_session; ?>
+        </h1>
 
 
         <ul>
@@ -39,10 +41,38 @@
 
         <div id="view_grade">
             <h1>View Grades</h1>
+            <form action="#" method="post">
+                <select name="viewgrades">
+                    <?php
+                        $sql = ""; // select all those courses which are completed
+                        $result = mysqli_query($db, $sql);                            
+                        while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                            //insert into select
+                        }
+                    ?>
+                </select>
+                <input type="submit" name="view" value="View Grades" />
+            </form>
+            <?php
+                if (isset($_POST["view"])) {
+                    $sql = ""; //select grades of students from that course
+                    $result = mysqli_query($db, $sql);
+                    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                        //print row
+                    }
+                }
+            ?>
         </div>
-        
+
         <div id="manage_tickets">
             <h1>Manage Tickets</h1>
+            <?php
+                $sql = ""; // fetch relevant tickets
+                    $result = mysqli_query($db, $sql);
+                    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                        //print row for ticket and add accept reject and forward buttons
+                    }
+            ?>
         </div>
 
     </body>

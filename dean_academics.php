@@ -31,10 +31,10 @@
                         <a href="#acadperf">Academic Performance</a>
                     </li>
                     <li>
-                        <a href="#regcourse">Register for a Course</a>
+                        <a href="#adddelcourses">Add/Delete Courses</a>
                     </li>
                     <li>
-                        <a href="#genticket">Generate Ticket</a>
+                        <a href="#manage_tickets">Manage Tickets</a>
                     </li>
                     <li>
                         <a href="logout.php">Sign Out</a>
@@ -73,25 +73,51 @@
                 </table>
 
             </div>
-            
-            <div id="regcourse">
+
+            <div id="adddelcourses">
                 <h1>Register for a course</h1>
                 Select Course:
-                <select>
-                            <?php
-                                $sql = "SELECT offers.course_id, courses.name FROM offers, courses WHERE offers.course_id = courses.course_id";
-                                $result = mysqli_query($db, $sql);                            
-                                while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                                    echo "<option><a href=\"#\" class=\"dropdown-item\">";
-                                    echo $row["course_id"] . ": " . $row["name"];
-                                    echo "</a></option>";
-                                }
-                    ?>
+                <form action="#" method="post">
+                    Course ID: <input type="text" name="courseid"><br>
+                    L: <input type="number" name="l"><br>
+                    T: <input type="number" name="t"><br>
+                    P: <input type="number" name="p"><br>
+                    Name: <input type="text" name="name"><br>
+                    Department:
+                    <select>
+                        <?php
+                            $sql = "SELECT * FROM department";
+                            $result = mysqli_query($db, $sql);
+                            while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                                echo '<option value="' . $row["name"] . '">';
+                                echo '</option>';
+                            }
+                        ?>
                     </select>
+                </form>
+                <input type="submit" name="add" value="Add Course" />
+                <?php
+                    if (issset($_POST["add"])) {
+                        $sql = "INSERT INTO Courses VALUES (". $_POST['courseid'] . "," . $_POST['l'] . "," . $_POST['t'] . "," . $_POST['p'] . "," . $_POST['name'] . ")";
+                        $result = mysqli_query($db, $sql);
+                        if ($result) {
+                            echo "Successfully added course";
+                        } else {
+                            echo "Not successful";
+                        }
+                    }
+                ?>
             </div>
-            
-            <div id="genticket">
-                <h1>Generate a ticket.</h1>
+
+            <div id="manage_tickets">
+                <h1>Manage Tickets</h1>
+                <?php
+                $sql = ""; // fetch relevant tickets
+                    $result = mysqli_query($db, $sql);
+                    while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+                        //print row for ticket and add accept reject and forward buttons
+                    }
+            ?>
             </div>
 
         </div>

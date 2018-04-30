@@ -22,7 +22,15 @@
         <div class="container">
 
             <h1>Welcome
-                <?php echo $login_session; ?>
+                <?php 
+                    echo $login_session; 
+                    $sql = "SELECT * FROM students WHERE id = " . $_SESSION["id"];
+                    $result = mysqli_query($db, $sql);
+                    $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                    echo '<h2>ID: ' . $row['ID'] . '</h2>';
+                    echo '<h2>Department: ' . $row['Department'] . '</h2>';
+                    echo '<h2>Batch Year: ' . $row['Batch_Year'] . '</h2>';
+                ?>
             </h1>
 
             <ul>
@@ -85,9 +93,9 @@
                                 while($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
                                     echo "<option value=\"" . $row["offer_id"] ."\"";
                                     if ($oid == $row["offer_id"]) echo "selected";
-                                    echo "><a href=\"#\" class=\"dropdown-item\">";
+                                    echo ">";
                                     echo "Offer #" . $row["offer_id"] . ":   " . $row["course_id"] . "(" . $row["name"] . ")";
-                                    echo "</a></option>";
+                                    echo "</option>";
                                 }
                             ?>
                         </select>

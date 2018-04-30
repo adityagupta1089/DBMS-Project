@@ -20,7 +20,14 @@
 
     <body style="margin:50px;">
         <h1>Welcome
-            <?php echo $login_session; ?>
+            <?php 
+                echo $login_session; 
+                $sql = "SELECT * FROM faculty WHERE faculty_id = " . $_SESSION["id"];
+                $result = mysqli_query($db, $sql);
+                $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
+                echo '<h2>ID: ' . $row['Faculty_ID'] . '</h2>';
+                echo '<h2>Department: ' . $row['Department'] . '</h2>';
+            ?>
         </h1>
 
 
@@ -82,7 +89,7 @@
                         }
                     ?>
                 </select>
-                <input type="submit" name="get" value="View Grades" />
+                <input type="submit" name="get" value="Get Students" />
             </form>
             <?php
                 if (isset($_POST["get"])) {
@@ -101,6 +108,7 @@
                     } else {
                         echo "Error submitting grades";
                     }
+                }
             ?>
         </div>
 
