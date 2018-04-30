@@ -53,7 +53,7 @@
                             echo '</select>';
                             echo '<input type="submit" name="view" value="View Grades" />';
                         } else {
-                            echo 'None of your courses are completed!';
+                            echo 'None of your courses are completed!' . mysqli_error($db);
                         }
                     ?>
 
@@ -74,7 +74,7 @@
                         }
                         echo '</tbody></table>';
                     } else {
-                        echo "No students";
+                        echo "No students" . mysqli_error($db);
                     }
                 }
             ?>
@@ -95,7 +95,7 @@
                             echo '</select>';
                             echo '<input type="submit" name="view2" value="View Grades" />';
                         } else {
-                            echo 'None of your courses are completed!';
+                            echo 'None of your courses are completed!' . mysqli_error($db);
                         }
                     ?>
 
@@ -112,7 +112,7 @@
                         echo "<h3>Department : ".$row["Department"].'</h3>';
                         echo "<h3>Batch : ".$row["Batch_Year"].'</h3>';
                     } else {
-                        echo "Student data not found";
+                        echo "Student data not found"  . mysqli_error($db);
                     }
                     $sql2 = 'select * from completed where Student_ID='.$row["ID"];
                     $result2 = mysqli_query($db, $sql2);
@@ -127,16 +127,12 @@
                             echo '<td>' . $row2["Semester"] . '</td>';
                             echo '<td>' . $row2["Year"] . '</td>';
                             echo '<td>' . $row2["grade"] . '</td>';
-                            echo "</tr>";
-                            
-                            
-                           
-                        }
-                        
+                            echo "</tr>";                           
+                        }                       
                         
                     }
                     else {
-                        echo "No completed courses";
+                        echo "No completed courses" . mysqli_error($db);
                     }
                     
                     
@@ -144,7 +140,7 @@
                 }
             ?>
         </div>
-            
+
         </div>
     </body>
 

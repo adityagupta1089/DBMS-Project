@@ -206,8 +206,8 @@
         <div id="offer_course">
             <h1>Offer Course</h1>
             <form action="#" method="post">
-
-                <?php
+                    Course:
+                    <?php
                         $sql = "SELECT * FROM courses";
                         $result = mysqli_query($db, $sql); 
                         if ($result && $result->num_rows>0){
@@ -219,17 +219,31 @@
                         } else {
                             echo "No courses";
                         }
+                        echo '<br>Section:';
+                        $sql = "SELECT * FROM section, time_slot where section.time_slot_id = time_slot.time_slot_id";
+                            $result = mysqli_query($db, $sql); 
+                            if ($result && $result->num_rows>0){
+                                echo '<select name="offersection">';
+                                while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
+                                    echo '<option value='.$row["Section_ID"].'>'.$row["Building"].', Room no. '.$row["Room_no"].',  '.$row["Year"].',  '.$row["Semester"].',  '.$row["Start_time"].' -  '.$row["End_time"].'</option>';
+                                }
+                                echo '</select>';
+                            } else {
+                                echo "No courses";
+                            }                        
                     ?>
+                    <br>
+                    Minimum CGPA: <input type="number" name="offermincgpa"><br>                    
                     <input type="submit" name="offer" value="Offer Course" />
             </form>
             <?php
                 if (isset($_POST["offer"])) {
-                    $sql = ""; // insert into offer table
+                    $sql = "INSERT INTO offers VALUES(Course_ID,Faculty_ID,section_ID,Minimum_CGPA) (".$_POST["offercourse"].",".$_SESSION["id"].",".$_POST["offersection"].",".$_POST["offermincgpa"].")"; 
                     $result = mysqli_query($db, $sql);
                     if ($result) {
                         echo "Successfully added offer";
                     } else {
-                        echo "Unsuccessful offer adding";
+                        echo "Unsuccessful offer adding" . mysqli_error($db);
                     }
                 }
             ?>
