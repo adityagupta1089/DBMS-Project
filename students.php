@@ -40,6 +40,7 @@
                     }
                     echo '</h2>';
                     $sql = "SELECT calculateCGPA(".$_SESSION["id"].") AS X";
+                    $result = mysqli_query($db, $sql);
                     $row = mysqli_fetch_array($result, MYSQLI_ASSOC);
                     echo '<h2>CGPA: ';
                     if (is_null($row["X"])) {
