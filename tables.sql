@@ -1,23 +1,149 @@
 -- phpMyAdmin SQL Dump
--- version 3.3.9
--- http://www.phpmyadmin.net
+-- version 4.8.0.1
+-- https://www.phpmyadmin.net/
 --
--- Host: localhost
--- Generation Time: Apr 30, 2018 at 04:35 PM
--- Server version: 5.5.8
--- PHP Version: 5.3.5
+-- Host: 127.0.0.1
+-- Generation Time: Apr 30, 2018 at 08:33 PM
+-- Server version: 10.1.29-MariaDB
+-- PHP Version: 7.1.12
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `dbms_project`
 --
+CREATE DATABASE IF NOT EXISTS `dbms_project` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `dbms_project`;
+
+DELIMITER $$
+--
+-- Procedures
+--
+DROP PROCEDURE IF EXISTS `updateGrade`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateGrade` (IN `s_ID` INTEGER, IN `grade` INTEGER, IN `o_ID` INTEGER)  BEGIN
+ 
+DECLARE f_ID Integer;
+DECLARE sem varchar(100);
+DECLARE yr integer;
+DECLARE c_ID varchar(100);
+
+IF grade<0 OR grade >10
+
+THEN 
+ 
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'INVALID GRADE(0-10 ALLOWED) !!';
+
+END IF;
+
+	set @f_ID := (select faculty_ID from offers where offers.offer_ID=o_ID);
+	set @c_ID := (select course_ID from offers where offers.offer_ID=o_ID);
+	set @sem := (select semester from section,offers where section.section_ID = offers.section_ID 
+	AND offers.offer_ID=o_ID);
+	set @yr := (select year from section,offers where section.section_ID = offers.section_ID 
+	AND offers.offer_ID=o_ID);
+
+	INSERT INTO completed(Course_ID, Faculty_ID, Semester, Year, grade, Student_ID) 
+	VALUES (@c_ID,@f_ID,@sem,@yr,grade,s_ID);
+	delete from takes where takes.student_ID = s_ID AND takes.offer_ID=o_ID;
+	
+	
+END$$
+
+--
+-- Functions
+--
+DROP FUNCTION IF EXISTS `calculateCGPA`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `calculateCGPA` (`stud_ID` INTEGER) RETURNS DOUBLE BEGIN
+
+DECLARE x REAL;
+DECLARE y REAL;
+DECLARE LSum REAL;
+DECLARE TSum REAL;
+DECLARE PSum REAL;
+
+
+ SET @x := 0;
+ SET @y := 0;
+ SET @LSum := 0;
+ SET @TSum := 0;
+ SET @PSum := 0;
+   
+    SET @x := (SELECT sum( grade * getCredits(Completed.course_ID) )
+	FROM Completed
+	Where Completed.student_ID = stud_ID );
+
+	SET @LSum := (SELECT sum(Courses.L)
+	FROM Courses,Completed
+	Where Completed.student_ID = stud_ID AND Completed.Course_ID = Courses.Course_ID);
+	
+	SET @TSum := (SELECT sum(Courses.T) 
+	FROM Courses,Completed
+	Where Completed.student_ID = stud_ID AND Completed.Course_ID = Courses.Course_ID);
+	
+	SET @PSum := (SELECT sum(Courses.P)
+	FROM Courses,Completed
+	Where Completed.student_ID = stud_ID AND Completed.Course_ID = Courses.Course_ID);
+
+SET @y :=  @LSum + @TSum + @PSum/2;
+
+SET @x := @x/@y;
+
+return @x;
+
+END$$
+
+DROP FUNCTION IF EXISTS `getCredits`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `getCredits` (`ID` VARCHAR(100)) RETURNS DOUBLE BEGIN
+
+DECLARE y REAL;
+DECLARE LSum REAL ;
+DECLARE TSum REAL ;
+DECLARE PSum REAL ;
+
+
+
+ SET @y := 0;
+   
+      
+	
+	SET @LSum := (SELECT courses.L  
+	FROM Courses
+	Where ID = Courses.Course_ID);
+	
+	SET @TSum := (SELECT courses.T  
+	FROM Courses
+	Where ID = Courses.Course_ID);
+	
+	SET @PSum := (SELECT courses.P  
+	FROM Courses
+	Where ID = Courses.Course_ID);
+	
+	
+
+SET @y := @LSum + @TSum + @PSum/2;
+
+return @y;
+
+END$$
+
+DROP FUNCTION IF EXISTS `getCreditsCompleted`$$
+CREATE DEFINER=`root`@`localhost` FUNCTION `getCreditsCompleted` (`gID` INTEGER) RETURNS DOUBLE BEGIN
+	declare y integer;
+ SET @y := (SELECT SUM(getCredits(course_id)) FROM `completed` WHERE student_id = gID);
+ RETURN @y;
+END$$
+
+DELIMITER ;
 
 -- --------------------------------------------------------
 
@@ -25,24 +151,19 @@ SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 -- Table structure for table `account`
 --
 
+DROP TABLE IF EXISTS `account`;
 CREATE TABLE IF NOT EXISTS `account` (
   `acct_num` int(11) DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `account`
---
-
-
---
 -- Triggers `account`
 --
 DROP TRIGGER IF EXISTS `ins_sum`;
-DELIMITER //
-CREATE TRIGGER `ins_sum` BEFORE INSERT ON `account`
- FOR EACH ROW SET @sum = @sum + NEW.amount
-//
+DELIMITER $$
+CREATE TRIGGER `ins_sum` BEFORE INSERT ON `account` FOR EACH ROW SET @sum = @sum + NEW.amount
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -51,6 +172,7 @@ DELIMITER ;
 -- Table structure for table `admin`
 --
 
+DROP TABLE IF EXISTS `admin`;
 CREATE TABLE IF NOT EXISTS `admin` (
   `Username` varchar(100) NOT NULL,
   `Password` char(32) NOT NULL,
@@ -79,6 +201,7 @@ INSERT INTO `admin` (`Username`, `Password`, `Category`, `ID`) VALUES
 -- Table structure for table `allowed_batches`
 --
 
+DROP TABLE IF EXISTS `allowed_batches`;
 CREATE TABLE IF NOT EXISTS `allowed_batches` (
   `Offer_ID` int(11) NOT NULL,
   `Department` varchar(100) NOT NULL,
@@ -106,6 +229,7 @@ INSERT INTO `allowed_batches` (`Offer_ID`, `Department`, `Batch_year`) VALUES
 -- Table structure for table `classroom`
 --
 
+DROP TABLE IF EXISTS `classroom`;
 CREATE TABLE IF NOT EXISTS `classroom` (
   `Building` varchar(100) NOT NULL,
   `Room_no.` int(11) NOT NULL,
@@ -128,6 +252,7 @@ INSERT INTO `classroom` (`Building`, `Room_no.`, `Capacity`) VALUES
 -- Table structure for table `completed`
 --
 
+DROP TABLE IF EXISTS `completed`;
 CREATE TABLE IF NOT EXISTS `completed` (
   `Course_ID` varchar(100) NOT NULL,
   `Faculty_ID` int(11) NOT NULL,
@@ -155,6 +280,7 @@ INSERT INTO `completed` (`Course_ID`, `Faculty_ID`, `Semester`, `Year`, `grade`,
 -- Table structure for table `courses`
 --
 
+DROP TABLE IF EXISTS `courses`;
 CREATE TABLE IF NOT EXISTS `courses` (
   `Course_ID` varchar(100) NOT NULL,
   `L` int(11) NOT NULL,
@@ -184,6 +310,7 @@ INSERT INTO `courses` (`Course_ID`, `L`, `T`, `P`, `Name`, `Department`) VALUES
 -- Table structure for table `dean`
 --
 
+DROP TABLE IF EXISTS `dean`;
 CREATE TABLE IF NOT EXISTS `dean` (
   `Faculty_ID` int(11) NOT NULL,
   `Start_time` time NOT NULL,
@@ -204,6 +331,7 @@ INSERT INTO `dean` (`Faculty_ID`, `Start_time`, `End_time`) VALUES
 -- Table structure for table `department`
 --
 
+DROP TABLE IF EXISTS `department`;
 CREATE TABLE IF NOT EXISTS `department` (
   `Name` varchar(100) NOT NULL,
   `Building` varchar(100) NOT NULL,
@@ -226,13 +354,14 @@ INSERT INTO `department` (`Name`, `Building`) VALUES
 -- Table structure for table `faculty`
 --
 
+DROP TABLE IF EXISTS `faculty`;
 CREATE TABLE IF NOT EXISTS `faculty` (
   `Faculty_ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) NOT NULL,
   `Department` varchar(100) NOT NULL,
   PRIMARY KEY (`Faculty_ID`),
   KEY `Department` (`Department`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `faculty`
@@ -252,6 +381,7 @@ INSERT INTO `faculty` (`Faculty_ID`, `Name`, `Department`) VALUES
 -- Table structure for table `faculty_advisor`
 --
 
+DROP TABLE IF EXISTS `faculty_advisor`;
 CREATE TABLE IF NOT EXISTS `faculty_advisor` (
   `Faculty_ID` int(11) NOT NULL,
   `Batch_year` int(11) NOT NULL,
@@ -273,6 +403,7 @@ INSERT INTO `faculty_advisor` (`Faculty_ID`, `Batch_year`) VALUES
 -- Table structure for table `hod`
 --
 
+DROP TABLE IF EXISTS `hod`;
 CREATE TABLE IF NOT EXISTS `hod` (
   `Faculty_ID` int(11) NOT NULL,
   `Start_time` time NOT NULL,
@@ -293,6 +424,7 @@ INSERT INTO `hod` (`Faculty_ID`, `Start_time`, `End_time`) VALUES
 -- Table structure for table `offers`
 --
 
+DROP TABLE IF EXISTS `offers`;
 CREATE TABLE IF NOT EXISTS `offers` (
   `Course_ID` varchar(100) NOT NULL,
   `Faculty_ID` int(11) NOT NULL,
@@ -304,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `offers` (
   KEY `section_att` (`section_ID`),
   KEY `Faculty_ID` (`Faculty_ID`),
   KEY `Course_ID` (`Course_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `offers`
@@ -324,6 +456,7 @@ INSERT INTO `offers` (`Course_ID`, `Faculty_ID`, `Offer_ID`, `section_ID`, `Mini
 -- Table structure for table `prerequisites`
 --
 
+DROP TABLE IF EXISTS `prerequisites`;
 CREATE TABLE IF NOT EXISTS `prerequisites` (
   `Course_ID` varchar(100) NOT NULL,
   `Prerequisite_ID` varchar(100) NOT NULL,
@@ -345,6 +478,7 @@ INSERT INTO `prerequisites` (`Course_ID`, `Prerequisite_ID`) VALUES
 -- Table structure for table `section`
 --
 
+DROP TABLE IF EXISTS `section`;
 CREATE TABLE IF NOT EXISTS `section` (
   `Section_ID` int(11) NOT NULL AUTO_INCREMENT,
   `Building` varchar(100) NOT NULL,
@@ -356,7 +490,7 @@ CREATE TABLE IF NOT EXISTS `section` (
   KEY `Time_slot_ID` (`Time_slot_ID`),
   KEY `Room_no` (`Room_no`),
   KEY `Building` (`Building`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `section`
@@ -374,13 +508,14 @@ INSERT INTO `section` (`Section_ID`, `Building`, `Room_no`, `Time_slot_ID`, `Yea
 -- Table structure for table `staff`
 --
 
+DROP TABLE IF EXISTS `staff`;
 CREATE TABLE IF NOT EXISTS `staff` (
   `Staff_ID` int(11) NOT NULL AUTO_INCREMENT,
   `Faculty_ID` int(11) NOT NULL,
   `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Staff_ID`),
   KEY `Faculty_ID` (`Faculty_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `staff`
@@ -397,6 +532,7 @@ INSERT INTO `staff` (`Staff_ID`, `Faculty_ID`, `Name`) VALUES
 -- Table structure for table `students`
 --
 
+DROP TABLE IF EXISTS `students`;
 CREATE TABLE IF NOT EXISTS `students` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Name` varchar(100) NOT NULL,
@@ -404,7 +540,7 @@ CREATE TABLE IF NOT EXISTS `students` (
   `Batch_Year` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Department` (`Department`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `students`
@@ -424,6 +560,7 @@ INSERT INTO `students` (`ID`, `Name`, `Department`, `Batch_Year`) VALUES
 -- Table structure for table `takes`
 --
 
+DROP TABLE IF EXISTS `takes`;
 CREATE TABLE IF NOT EXISTS `takes` (
   `Student_ID` int(11) NOT NULL,
   `Offer_ID` int(11) NOT NULL,
@@ -442,9 +579,8 @@ INSERT INTO `takes` (`Student_ID`, `Offer_ID`) VALUES
 -- Triggers `takes`
 --
 DROP TRIGGER IF EXISTS `delete_OFFERS`;
-DELIMITER //
-CREATE TRIGGER `delete_OFFERS` AFTER DELETE ON `takes`
- FOR EACH ROW BEGIN
+DELIMITER $$
+CREATE TRIGGER `delete_OFFERS` AFTER DELETE ON `takes` FOR EACH ROW BEGIN
 
 UPDATE  `Offers` SET  `Completed` =  '1' 
 WHERE Offers.Offer_ID = OLD.Offer_ID AND NOT EXISTS(SELECT * FROM Takes
@@ -452,7 +588,7 @@ WHERE Takes.Offer_ID = OLD.Offer_ID);
 
 
 END
-//
+$$
 DELIMITER ;
 
 -- --------------------------------------------------------
@@ -461,6 +597,7 @@ DELIMITER ;
 -- Table structure for table `ticket`
 --
 
+DROP TABLE IF EXISTS `ticket`;
 CREATE TABLE IF NOT EXISTS `ticket` (
   `Offer_ID` int(11) NOT NULL,
   `Student_ID` int(11) NOT NULL,
@@ -470,17 +607,13 @@ CREATE TABLE IF NOT EXISTS `ticket` (
   KEY `Student_ID` (`Student_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
---
--- Dumping data for table `ticket`
---
-
-
 -- --------------------------------------------------------
 
 --
 -- Table structure for table `time_slot`
 --
 
+DROP TABLE IF EXISTS `time_slot`;
 CREATE TABLE IF NOT EXISTS `time_slot` (
   `Start_time` time NOT NULL,
   `End_time` time NOT NULL,
@@ -515,9 +648,9 @@ ALTER TABLE `allowed_batches`
 -- Constraints for table `completed`
 --
 ALTER TABLE `completed`
-  ADD CONSTRAINT `completed_ibfk_3` FOREIGN KEY (`Course_ID`) REFERENCES `courses` (`Course_ID`),
   ADD CONSTRAINT `completed_ibfk_1` FOREIGN KEY (`Faculty_ID`) REFERENCES `faculty` (`Faculty_ID`),
-  ADD CONSTRAINT `completed_ibfk_2` FOREIGN KEY (`Student_ID`) REFERENCES `students` (`ID`);
+  ADD CONSTRAINT `completed_ibfk_2` FOREIGN KEY (`Student_ID`) REFERENCES `students` (`ID`),
+  ADD CONSTRAINT `completed_ibfk_3` FOREIGN KEY (`Course_ID`) REFERENCES `courses` (`Course_ID`);
 
 --
 -- Constraints for table `courses`
@@ -590,3 +723,8 @@ ALTER TABLE `takes`
 --
 ALTER TABLE `ticket`
   ADD CONSTRAINT `ticket_ibfk_1` FOREIGN KEY (`Offer_ID`) REFERENCES `offers` (`Offer_ID`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
