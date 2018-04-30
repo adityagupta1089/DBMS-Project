@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 30, 2018 at 11:35 AM
+-- Generation Time: Apr 30, 2018 at 04:35 PM
 -- Server version: 5.5.8
 -- PHP Version: 5.3.5
 
@@ -67,7 +67,10 @@ CREATE TABLE IF NOT EXISTS `admin` (
 INSERT INTO `admin` (`Username`, `Password`, `Category`, `ID`) VALUES
 ('abcd', '1234', 0, 1),
 ('aditya', '1234', 0, 0),
+('dota', 'abcd', 4, 88),
+('hoodie', 'abcd', 3, 11),
 ('mudgal', 'abcd', 1, 5),
+('staffi', 'abcd', 2, 10),
 ('vinit', 'abcd', 0, 2);
 
 -- --------------------------------------------------------
@@ -88,6 +91,14 @@ CREATE TABLE IF NOT EXISTS `allowed_batches` (
 -- Dumping data for table `allowed_batches`
 --
 
+INSERT INTO `allowed_batches` (`Offer_ID`, `Department`, `Batch_year`) VALUES
+(1, 'CSE', 2015),
+(5, 'CSE', 2015),
+(3, 'EE', 2014),
+(2, 'MECH', 2015),
+(9, 'MECH', 2011),
+(9, 'MECH', 2015),
+(2, 'MECH', 2011);
 
 -- --------------------------------------------------------
 
@@ -134,8 +145,9 @@ CREATE TABLE IF NOT EXISTS `completed` (
 --
 
 INSERT INTO `completed` (`Course_ID`, `Faculty_ID`, `Semester`, `Year`, `grade`, `Student_ID`) VALUES
-('CSL101', 1, 'SAd', 456, 56, 1),
-('MEL101', 2, 'dry', 456, 78, 1);
+('MEL101', 2, 'fall', 2016, 8, 2),
+('EEL101', 3, 'spring', 2017, 7, 5),
+('CSL101', 1, 'spring', 2015, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -159,10 +171,12 @@ CREATE TABLE IF NOT EXISTS `courses` (
 --
 
 INSERT INTO `courses` (`Course_ID`, `L`, `T`, `P`, `Name`, `Department`) VALUES
+('CSL100', 1, 1, 0, 'Intro to CSE', 'CSE'),
 ('CSL101', 2, 2, 2, 'DS', 'CSE'),
 ('CSL202', 3, 0, 1, 'AI', 'CSE'),
 ('EEL101', 1, 2, 2, 'EM', 'EE'),
-('MEL101', 2, 1, 2, 'TOM', 'MECH');
+('MEL101', 2, 1, 2, 'TOM', 'MECH'),
+('MEL202', 2, 1, 2, 'Fluid mechanics', 'MECH');
 
 -- --------------------------------------------------------
 
@@ -181,6 +195,8 @@ CREATE TABLE IF NOT EXISTS `dean` (
 -- Dumping data for table `dean`
 --
 
+INSERT INTO `dean` (`Faculty_ID`, `Start_time`, `End_time`) VALUES
+(3, '00:00:01', '00:00:05');
 
 -- --------------------------------------------------------
 
@@ -216,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `faculty` (
   `Department` varchar(100) NOT NULL,
   PRIMARY KEY (`Faculty_ID`),
   KEY `Department` (`Department`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `faculty`
@@ -225,7 +241,10 @@ CREATE TABLE IF NOT EXISTS `faculty` (
 INSERT INTO `faculty` (`Faculty_ID`, `Name`, `Department`) VALUES
 (1, 'Mudgal', 'CSE'),
 (2, 'Das', 'MECH'),
-(3, 'ROY', 'EE');
+(3, 'ROY', 'EE'),
+(4, 'Iyenger', 'CSE'),
+(5, 'Sahambi', 'EE'),
+(6, 'Dhiraj', 'MECH');
 
 -- --------------------------------------------------------
 
@@ -243,6 +262,10 @@ CREATE TABLE IF NOT EXISTS `faculty_advisor` (
 -- Dumping data for table `faculty_advisor`
 --
 
+INSERT INTO `faculty_advisor` (`Faculty_ID`, `Batch_year`) VALUES
+(4, 2015),
+(6, 2016),
+(5, 2018);
 
 -- --------------------------------------------------------
 
@@ -261,6 +284,8 @@ CREATE TABLE IF NOT EXISTS `hod` (
 -- Dumping data for table `hod`
 --
 
+INSERT INTO `hod` (`Faculty_ID`, `Start_time`, `End_time`) VALUES
+(1, '00:00:01', '00:00:02');
 
 -- --------------------------------------------------------
 
@@ -279,7 +304,7 @@ CREATE TABLE IF NOT EXISTS `offers` (
   KEY `section_att` (`section_ID`),
   KEY `Faculty_ID` (`Faculty_ID`),
   KEY `Course_ID` (`Course_ID`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=10 ;
 
 --
 -- Dumping data for table `offers`
@@ -287,9 +312,11 @@ CREATE TABLE IF NOT EXISTS `offers` (
 
 INSERT INTO `offers` (`Course_ID`, `Faculty_ID`, `Offer_ID`, `section_ID`, `Minimum_CGPA`, `Completed`) VALUES
 ('CSL101', 1, 1, 1, 0, 0),
-('MEL101', 2, 2, 1, 0, 0),
+('MEL101', 2, 2, 1, 0, 1),
 ('EEL101', 3, 3, 1, 0, 0),
-('CSL202', 1, 5, 2, 10, 0);
+('CSL202', 4, 5, 2, 10, 0),
+('CSL100', 1, 8, 1, 0, 0),
+('MEL202', 6, 9, 4, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -309,7 +336,8 @@ CREATE TABLE IF NOT EXISTS `prerequisites` (
 --
 
 INSERT INTO `prerequisites` (`Course_ID`, `Prerequisite_ID`) VALUES
-('CSL202', 'CSL101');
+('CSL202', 'CSL101'),
+('MEL202', 'MEL101');
 
 -- --------------------------------------------------------
 
@@ -328,7 +356,7 @@ CREATE TABLE IF NOT EXISTS `section` (
   KEY `Time_slot_ID` (`Time_slot_ID`),
   KEY `Room_no` (`Room_no`),
   KEY `Building` (`Building`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
 
 --
 -- Dumping data for table `section`
@@ -336,7 +364,9 @@ CREATE TABLE IF NOT EXISTS `section` (
 
 INSERT INTO `section` (`Section_ID`, `Building`, `Room_no`, `Time_slot_ID`, `Year`, `Semester`) VALUES
 (1, 'B1', 1, 1, 2015, 'spring'),
-(2, 'B2', 1, 2, 2015, 'fall');
+(2, 'B2', 1, 2, 2015, 'fall'),
+(3, 'B1', 2, 3, 2017, 'fall'),
+(4, 'B1', 1, 4, 2018, 'spring');
 
 -- --------------------------------------------------------
 
@@ -350,12 +380,16 @@ CREATE TABLE IF NOT EXISTS `staff` (
   `Name` varchar(100) NOT NULL,
   PRIMARY KEY (`Staff_ID`),
   KEY `Faculty_ID` (`Faculty_ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=44 ;
 
 --
 -- Dumping data for table `staff`
 --
 
+INSERT INTO `staff` (`Staff_ID`, `Faculty_ID`, `Name`) VALUES
+(2, 2, 'sujit'),
+(41, 1, 'Raghu'),
+(43, 4, 'Riya');
 
 -- --------------------------------------------------------
 
@@ -370,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `students` (
   `Batch_Year` int(11) NOT NULL,
   PRIMARY KEY (`ID`),
   KEY `Department` (`Department`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `students`
@@ -379,7 +413,10 @@ CREATE TABLE IF NOT EXISTS `students` (
 INSERT INTO `students` (`ID`, `Name`, `Department`, `Batch_Year`) VALUES
 (1, 'Vinit', 'CSE', 2015),
 (2, 'Shubham', 'MECH', 2015),
-(3, 'Durgesh', 'EE', 2015);
+(3, 'Durgesh', 'EE', 2015),
+(4, 'Aditya', 'CSE', 2016),
+(5, 'Snigdha', 'EE', 2014),
+(6, 'Parth', 'MECH', 2011);
 
 -- --------------------------------------------------------
 
@@ -399,52 +436,19 @@ CREATE TABLE IF NOT EXISTS `takes` (
 --
 
 INSERT INTO `takes` (`Student_ID`, `Offer_ID`) VALUES
-(1, 5);
+(2, 9);
 
 --
 -- Triggers `takes`
 --
-DROP TRIGGER IF EXISTS `check_prereq`;
+DROP TRIGGER IF EXISTS `delete_OFFERS`;
 DELIMITER //
-CREATE TRIGGER `check_prereq` BEFORE INSERT ON `takes`
+CREATE TRIGGER `delete_OFFERS` AFTER DELETE ON `takes`
  FOR EACH ROW BEGIN
 
- IF((select count(prerequisites.prerequisite_ID) from Courses,Offers,Prerequisites Where 
- Offers.Course_ID = Courses.course_ID AND 
-Courses.Course_ID = Prerequisites.course_ID 
-AND offers.offer_ID=NEW.offer_ID  AND EXISTS  
-
-(select completed.course_ID from completed WHERE completed.student_ID = NEW.Student_ID AND 
-completed.course_ID = prerequisites.prerequisite_ID) ) != 
-
- (select count(prerequisites.prerequisite_ID) from Courses,Offers,Prerequisites Where 
- Offers.Course_ID = Courses.course_ID AND 
-Courses.Course_ID = Prerequisites.course_ID 
-AND offers.offer_ID=NEW.offer_ID)
-
-	
-	   ) THEN
-			
-			SIGNAL SQLSTATE '45000'
- SET MESSAGE_TEXT = 'Prerequisites Not cleared !!';
- 
- 
- ELSEIF(
-	EXISTS(SELECT * FROM  Courses , Offers , Section
-	WHERE  
-	Offers.Offer_ID = NEW.Offer_ID AND Offers.Section_ID = Section.Section_ID
-	AND 
-	section.time_slot_ID = ANY (select time_slot_ID from Takes , Courses , Offers , Section WHERE 
-	Takes.Student_ID = NEW.Student_ID  AND Offers.Offer_ID = Takes.Offer_ID 
-	AND Offers.Section_ID = Section.Section_ID )
-))THEN
-			
-			SIGNAL SQLSTATE '45000'
- SET MESSAGE_TEXT = 'Conflicting time slots !!';
-
-
-
-END IF;
+UPDATE  `Offers` SET  `Completed` =  '1' 
+WHERE Offers.Offer_ID = OLD.Offer_ID AND NOT EXISTS(SELECT * FROM Takes
+WHERE Takes.Offer_ID = OLD.Offer_ID);
 
 
 END
@@ -496,7 +500,9 @@ CREATE TABLE IF NOT EXISTS `time_slot` (
 
 INSERT INTO `time_slot` (`Start_time`, `End_time`, `Time_slot_ID`, `day`) VALUES
 ('00:00:01', '00:00:02', 1, 'monday'),
-('00:00:05', '00:00:06', 2, 'wednesday');
+('00:00:02', '00:00:04', 4, 'thursday'),
+('00:00:05', '00:00:06', 2, 'wednesday'),
+('00:00:10', '00:00:11', 3, 'tuesday');
 
 --
 -- Constraints for dumped tables

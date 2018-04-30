@@ -88,3 +88,44 @@ SET @y := @LSum + @TSum + @PSum/2;
 return @y;
 
 END;//
+
+
+
+
+
+DROP PROCEDURE IF EXISTS updateGrade;//
+CREATE PROCEDURE updateGrade (in s_ID INTEGER,in grade INTEGER,in o_ID INTEGER)          
+
+BEGIN
+ 
+DECLARE f_ID Integer;
+DECLARE sem varchar(100);
+DECLARE yr integer;
+DECLARE c_ID varchar(100);
+
+IF grade<0 OR grade >10
+
+THEN 
+ 
+ SIGNAL SQLSTATE '45000'
+ SET MESSAGE_TEXT = 'INVALID GRADE(0-10 ALLOWED) !!';
+
+END IF;
+
+	set @f_ID := (select faculty_ID from offers where offers.offer_ID=o_ID);
+	set @c_ID := (select course_ID from offers where offers.offer_ID=o_ID);
+	set @sem := (select semester from section,offers where section.section_ID = offers.section_ID 
+	AND offers.offer_ID=o_ID);
+	set @yr := (select year from section,offers where section.section_ID = offers.section_ID 
+	AND offers.offer_ID=o_ID);
+
+	INSERT INTO completed(Course_ID, Faculty_ID, Semester, Year, grade, Student_ID) 
+	VALUES (@c_ID,@f_ID,@sem,@yr,grade,s_ID);
+	delete from takes where takes.student_ID = s_ID AND takes.offer_ID=o_ID;
+	
+	
+END;//
+
+
+
+
