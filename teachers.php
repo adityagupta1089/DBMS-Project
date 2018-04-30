@@ -82,7 +82,7 @@
                         }
                     ?>
                 </select>
-                <input type="submit" name="get" value="View Grades" />
+                <input type="submit" name="get" value="Get Students" />
             </form>
             <?php
                 if (isset($_POST["get"])) {
@@ -101,6 +101,7 @@
                     } else {
                         echo "Error submitting grades";
                     }
+                }
             ?>
         </div>
 
