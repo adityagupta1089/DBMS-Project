@@ -99,7 +99,7 @@
             <h1>Update Grades</h1>
             <form action="#" method="post">
                 <?php
-                        $sql = "SELECT * FROM offers WHERE completed=0 and faculty_id = ".$_SESSION["id"]; 
+                        $sql = "SELECT * FROM offers WHERE Completed=0 and faculty_id = ".$_SESSION["id"]; 
                         $result = mysqli_query($db, $sql);
                         if ($result && $result->num_rows>0) {
                             echo '<select name="getcourse">';

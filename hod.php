@@ -94,6 +94,7 @@
             <h1>Manage Tickets</h1>
             <?php
                 $sql = "SELECT * FROM ticket,offers,courses WHERE  offers.offer_ID = ticket.offer_id AND courses.Course_ID=offers.Course_ID AND
+                offers.completed=0 AND offers.Completed = 0 AND
                 courses.Department=(SELECT Department FROM faculty WHERE Faculty_ID =".$_SESSION["id"] ." )
                 AND status = ".ACCEPTED_FORWARDED_FA ;
                 $result = mysqli_query($db, $sql);
