@@ -225,7 +225,7 @@
                             if ($result && $result->num_rows>0){
                                 echo '<select name="offersection">';
                                 while ($row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-                                    echo '<option value='.$row["Section_ID"].'>'.$row["Building"].', Room no. '.$row["Room_no"].',  '.$row["Year"].',  '.$row["Semester"].',  '.$row["Start_time"].' -  '.$row["End_time"].'</option>';
+                                    echo '<option value='.$row["Section_ID"].'><a href="#">'.$row["Building"].', Room no. '.$row["Room_no"].',  '.$row["Year"].',  '.$row["Semester"].',  '.$row["Start_time"].' -  '.$row["End_time"].'</a></option>';
                                 }
                                 echo '</select>';
                             } else {
