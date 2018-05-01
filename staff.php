@@ -150,6 +150,7 @@
                 Building: <input type="text" name="building"><br>
                 Room No: <input type="number" name="roomno"><br>
                 Semester: <input type="text" name="semester"><br>
+                Year: <input type="number" name="year"><br>
                 Time Slot:
                 <select name="timeslotid">
                         <?php
@@ -166,7 +167,8 @@
             </form>
             <?php
                     if (isset($_POST["add"])) {
-                        $sql = "INSERT INTO section(Building, Room_no, Time_slot_ID,Semester) VALUES (\"". $_POST['building'] . "\"," . $_POST['roomno'] . "," . $_POST['timeslotid'] . ", \"" . $_POST["semester"]."\")";
+                        $sql = "INSERT INTO section(Building, Room_no, Time_slot_ID,Semester,Year) VALUES (\"". $_POST['building'] . "\"," . $_POST['roomno'] . "," . $_POST['timeslotid'] . ", \"" . $_POST["semester"]."\",".$_POST["year"].")";
+                        echo $sql;
                         $result = mysqli_query($db, $sql);
                         if ($result) {
                             echo "Successfully added section";

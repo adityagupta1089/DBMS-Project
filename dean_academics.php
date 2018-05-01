@@ -201,7 +201,7 @@
                             echo "Not successful" . " (" . mysqli_error($db) . ")";
                         }
                         foreach ($_POST["prereq"] as $p) {
-                            $sql = "INSERT INTO prerequisites VALUES (\"".$_POST["offercourse"]."\",\"".$p."\")";
+                            $sql = "INSERT INTO prerequisites VALUES (\"".$_POST["courseid"]."\",\"".$p."\")";
                             $result = mysqli_query($db, $sql);
                             if ($result) {
                                 echo "Successfully added prerequisite: " . $p;
